@@ -69,7 +69,7 @@ npx prisma generate
 # 推送数据库结构到本地 SQLite
 npx prisma db push
 
-# 播种初始数据（管理员账户、示例文章等）
+# 播种初始数据（管理员账户、分类、标签、默认页面等）
 npx prisma db seed
 ```
 
