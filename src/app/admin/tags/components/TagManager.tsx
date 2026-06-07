@@ -6,7 +6,7 @@ import { Plus, Edit, Trash2, Tag } from "lucide-react";
 import styles from "./TagManager.module.css";
 
 interface Tag {
-  id: string;
+  id: number;
   name: string;
   slug: string;
 }
@@ -18,7 +18,7 @@ interface TagManagerProps {
 export function TagManager({ initialTags }: TagManagerProps) {
   const router = useRouter();
   const [tags] = useState(initialTags);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [editSlug, setEditSlug] = useState("");
   const [isCreating, setIsCreating] = useState(false);
@@ -52,7 +52,7 @@ export function TagManager({ initialTags }: TagManagerProps) {
     }
   };
 
-  const handleUpdate = async (id: string) => {
+  const handleUpdate = async (id: number) => {
     if (!editName.trim()) return;
     setSaving(true);
     setError("");
@@ -75,7 +75,7 @@ export function TagManager({ initialTags }: TagManagerProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (!confirm("确定要删除这个标签吗？")) return;
     const res = await fetch(`/api/tags/${id}`, { method: "DELETE", credentials: "include" });
     if (res.ok) {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { FriendLink } from "@/types/blog";
 import styles from "./Footer.module.css";
 
@@ -61,7 +62,14 @@ export function Footer({
                   title={link.description}
                 >
                   {link.logo ? (
-                    <img src={link.logo} alt={link.name} className={styles.friendLogo} />
+                    <Image
+                      src={link.logo}
+                      alt={link.name}
+                      width={20}
+                      height={20}
+                      className={styles.friendLogo}
+                      unoptimized
+                    />
                   ) : null}
                   <span>{link.name}</span>
                 </a>

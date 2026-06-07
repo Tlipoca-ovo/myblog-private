@@ -11,7 +11,6 @@ export function ReadingProgress() {
       const article = document.querySelector("article") || document.querySelector("main");
       if (!article) return;
 
-      const rect = article.getBoundingClientRect();
       const articleHeight = article.scrollHeight;
       const windowHeight = window.innerHeight;
       const scrolled = window.scrollY - article.offsetTop + windowHeight * 0.1;

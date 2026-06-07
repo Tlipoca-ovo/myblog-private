@@ -3,14 +3,15 @@ import { prisma } from "@/lib/db";
 import { successResponse, errorResponse } from "@/lib/api-response";
 import { unauthorized, notFound, conflict, badRequest } from "@/lib/api-error";
 import { extractToken, verifyToken } from "@/lib/auth";
-import { generateSlug, isValidColor } from "@/lib/slug";
+import { isValidColor } from "@/lib/slug";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function GET(_request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
-    const tag = await prisma.tag.findUnique({ where: { id } });
+    const idNum = parseInt(id, 10);
+    const tag = await prisma.tag.findUnique({ where: { id: idNum } });
     if (!tag) return NextResponse.json(notFound("标签不存在").toJSON(), { status: 404 });
     return NextResponse.json(successResponse(tag));
   } catch (error) {
@@ -26,10 +27,11 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       return NextResponse.json(unauthorized("认证失败").toJSON(), { status: 401 });
     }
     const { id } = await context.params;
+    const idNum = parseInt(id, 10);
     const body = await request.json();
     const { name, slug, color } = body;
 
-    const existing = await prisma.tag.findUnique({ where: { id } });
+    const existing = await prisma.tag.findUnique({ where: { id: idNum } });
     if (!existing) return NextResponse.json(notFound("标签不存在").toJSON(), { status: 404 });
 
     const updateData: Record<string, unknown> = {};
@@ -46,7 +48,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       updateData.slug = slug;
     }
 
-    const tag = await prisma.tag.update({ where: { id }, data: updateData });
+    const tag = await prisma.tag.update({ where: { id: idNum }, data: updateData });
     return NextResponse.json(successResponse(tag));
   } catch (error) {
     console.error("更新标签失败:", error instanceof Error ? error.message : error);
@@ -61,8 +63,9 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       return NextResponse.json(unauthorized("认证失败").toJSON(), { status: 401 });
     }
     const { id } = await context.params;
+    const idNum = parseInt(id, 10);
 
-    const postCount = await prisma.postTag.count({ where: { tagId: id } });
+    const postCount = await prisma.postTag.count({ where: { tagId: idNum } });
     if (postCount > 0) {
       return NextResponse.json(
         conflict(`该标签下有 ${postCount} 篇文章，请先移除关联后再删除`).toJSON(),
@@ -70,9 +73,9 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const existing = await prisma.tag.findUnique({ where: { id } });
+    const existing = await prisma.tag.findUnique({ where: { id: idNum } });
     if (!existing) return NextResponse.json(notFound("标签不存在").toJSON(), { status: 404 });
-    await prisma.tag.delete({ where: { id } });
+    await prisma.tag.delete({ where: { id: idNum } });
     return NextResponse.json(successResponse({ message: "标签已删除" }));
   } catch (error) {
     console.error("删除标签失败:", error instanceof Error ? error.message : error);

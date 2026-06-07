@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Calendar, Eye, Heart } from "lucide-react";
+import Image from "next/image";
+import { Calendar, Eye } from "lucide-react";
 import type { Post } from "@/types/blog";
 import styles from "./PostCard.module.css";
 
@@ -11,7 +12,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, variant = "default" }: PostCardProps) {
-  const formattedDate = new Date(post.publishedAt || post.createdAt).toLocaleDateString("zh-CN", {
+  const formattedDate = new Date(post.createdAt).toLocaleDateString("zh-CN", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -33,11 +34,13 @@ export function PostCard({ post, variant = "default" }: PostCardProps) {
       {/* 封面图 */}
       {post.coverImage && (
         <Link href={`/posts/${post.slug}`} className={styles.coverLink}>
-          <img
+          <Image
             src={post.coverImage}
             alt={post.title}
+            width={1200}
+            height={675}
             className={styles.coverImage}
-            loading="lazy"
+            unoptimized
           />
         </Link>
       )}
@@ -78,10 +81,6 @@ export function PostCard({ post, variant = "default" }: PostCardProps) {
           <span className={styles.metaItem}>
             <Eye size={14} />
             {post.viewCount}
-          </span>
-          <span className={styles.metaItem}>
-            <Heart size={14} />
-            {post.likeCount}
           </span>
         </div>
 

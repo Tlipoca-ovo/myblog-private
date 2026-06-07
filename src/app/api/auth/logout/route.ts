@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { successResponse } from "@/lib/api-response";
 
 /**
@@ -7,6 +7,6 @@ import { successResponse } from "@/lib/api-response";
  * JWT 是无状态的，logout 由客户端自行删除 token
  * 此接口用于记录审计日志（可选）
  */
-export async function POST(_request: NextRequest) {
+export async function POST() {
   return NextResponse.json(successResponse({ message: "已退出登录" }));
 }

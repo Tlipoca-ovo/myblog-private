@@ -22,10 +22,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
     }
 
     const { id } = await context.params;
+    const idNum = parseInt(id, 10);
     const body = await request.json();
     const { action } = body;
 
-    const existing = await prisma.post.findUnique({ where: { id } });
+    const existing = await prisma.post.findUnique({ where: { id: idNum } });
     if (!existing) {
       return NextResponse.json(notFound("文章不存在").toJSON(), { status: 404 });
     }
@@ -44,19 +45,20 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const newStatus = action === "publish" ? "published" : "draft";
 
     const post = await prisma.post.update({
-      where: { id },
+      where: { id: idNum },
       data: {
         status: newStatus,  // 不设置 publishedAt（Schema 中不存在此字段）
       },
       include: {
         author: { select: { id: true, username: true, nickname: true } },
-        category: { select: { id: true, name: true, slug: true } },
+        categories: { include: { category: { select: { id: true, name: true, slug: true } } } },
         tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
       },
     });
 
     return NextResponse.json(successResponse({
       ...post,
+      category: post.categories[0]?.category ?? null,
       tags: post.tags.map((pt) => pt.tag),
       message: action === "publish" ? "文章已发布" : "文章已下架",
     }));

@@ -5,7 +5,9 @@ import { TableOfContents } from "@/components/blog/TableOfContents";
 import { Comments } from "@/components/blog/Comments";
 import { ReadingProgress } from "@/components/blog/ReadingProgress";
 import { parseThemeColors, generateThemeCSS } from "@/lib/theme";
+import Image from "next/image";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import styles from "./page.module.css";
 
 interface PostPageProps {
@@ -16,24 +18,33 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   const { slug } = await params;
   const post = await prisma.post.findUnique({
     where: { slug, status: "published" },
-    select: { title: true, excerpt: true, coverImage: true },
+    select: { title: true, description: true, coverImage: true },
   });
   if (!post) return { title: "文章未找到" };
   return {
     title: post.title,
-    description: post.excerpt,
+    description: post.description || undefined,
     openGraph: {
       title: post.title,
-      description: post.excerpt,
+      description: post.description || undefined,
       images: post.coverImage ? [post.coverImage] : [],
     },
   };
 }
 
 export default async function PostPage({ params }: PostPageProps) {
+  await connection();
+
   const { slug } = await params;
 
-  let post: Awaited<ReturnType<typeof prisma.post.findUnique>> = null;
+  let post: Awaited<ReturnType<typeof prisma.post.findUnique<{
+  where: { slug: string; status: string };
+  include: {
+    author: { select: { id: true; username: true; nickname: true; avatar: true } };
+    categories: { include: { category: { select: { id: true; name: true; slug: true } } } };
+    tags: { include: { tag: { select: { id: true; name: true; slug: true; color: true } } } };
+  };
+}>>> | null = null;
   let categories: Awaited<ReturnType<typeof prisma.category.findMany>> = [];
   let tagsWithCount: { id: number; name: string; slug: string; color: string; postCount: number }[] = [];
   let siteConfig: Awaited<ReturnType<typeof prisma.siteSettings.findFirst>> = null;
@@ -43,8 +54,8 @@ export default async function PostPage({ params }: PostPageProps) {
       where: { slug, status: "published" },
       include: {
         author: { select: { id: true, username: true, nickname: true, avatar: true } },
-        categories: { select: { id: true, name: true, slug: true } },
-        tags: { select: { id: true, name: true, slug: true, color: true } },
+        categories: { include: { category: { select: { id: true, name: true, slug: true } } } },
+        tags: { include: { tag: { select: { id: true, name: true, slug: true, color: true } } } },
       },
     });
   } catch (error) {
@@ -57,7 +68,7 @@ export default async function PostPage({ params }: PostPageProps) {
   try {
     await prisma.post.update({
       where: { id: post.id },
-      data: { viewCount: { increment: 1 } },
+      data: { views: { increment: 1 } },
     });
   } catch (error) {
     console.error("浏览量更新失败:", error instanceof Error ? error.message : error);
@@ -67,42 +78,58 @@ export default async function PostPage({ params }: PostPageProps) {
     const [fetchedCategories, fetchedTags, fetchedConfig] = await Promise.all([
       prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
       prisma.tag.findMany({
-        include: { _count: { select: { postTags: true } } },
+        include: { _count: { select: { posts: true } } },
         orderBy: { name: "asc" },
       }),
       prisma.siteSettings.findFirst(),
     ]);
     categories = fetchedCategories;
-    tagsWithCount = fetchedTags.map((t) => ({ ...t, postCount: t._count.postTags }));
+    tagsWithCount = fetchedTags.map((t) => ({
+      id: t.id,
+      name: t.name,
+      slug: t.slug,
+      color: t.color || "",
+      postCount: t._count.posts,
+    }));
     siteConfig = fetchedConfig;
   } catch (error) {
     console.error("侧边栏数据加载失败:", error instanceof Error ? error.message : error);
   }
 
+  // 将 Prisma 返回的 null 转换为 undefined，避免类型不匹配
+  const safeCategories = categories.map((c) => ({ ...c, description: c.description ?? undefined }));
+
   const themeColors = parseThemeColors(siteConfig?.themeColors || "");
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: generateThemeCSS(themeColors, {}) }} />
+      <style dangerouslySetInnerHTML={{ __html: generateThemeCSS(themeColors) }} />
       <ReadingProgress />
       <BlogLayout
         siteConfig={siteConfig || {}}
-        categories={categories}
+        categories={safeCategories}
         tags={tagsWithCount}
         showSidebar={false}
       >
         <article className={styles.article}>
           {/* 封面图 */}
           {post.coverImage && (
-            <img src={post.coverImage} alt={post.title} className={styles.coverImage} />
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              width={1200}
+              height={675}
+              className={styles.coverImage}
+              unoptimized
+            />
           )}
 
           {/* 元信息 */}
           <header className={styles.header}>
             <div className={styles.categories}>
               {post.categories.map((cat) => (
-                <a key={cat.id} href={`/categories/${cat.slug}`} className={styles.category}>
-                  {cat.name}
+                <a key={cat.categoryId} href={`/categories/${cat.category.slug}`} className={styles.category}>
+                  {cat.category.name}
                 </a>
               ))}
             </div>
@@ -111,31 +138,25 @@ export default async function PostPage({ params }: PostPageProps) {
               <span>{post.author.nickname}</span>
               <span>·</span>
               <span>
-                {post.publishedAt
-                  ? new Date(post.publishedAt).toLocaleDateString("zh-CN", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })
-                  : new Date(post.createdAt).toLocaleDateString("zh-CN", {
+                {new Date(post.createdAt).toLocaleDateString("zh-CN", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
                     })}
               </span>
               <span>·</span>
-              <span>{post.viewCount} 阅读</span>
+              <span>{post.views} 阅读</span>
             </div>
             {post.tags.length > 0 && (
               <div className={styles.tags}>
-                {post.tags.map((tag) => (
+                {post.tags.map((pt) => (
                   <a
-                    key={tag.id}
-                    href={`/tags/${tag.slug}`}
+                    key={pt.tagId}
+                    href={`/tags/${pt.tag.slug}`}
                     className={styles.tag}
-                    style={{ "--tag-color": tag.color } as React.CSSProperties}
+                    style={{ "--tag-color": pt.tag.color } as React.CSSProperties}
                   >
-                    {tag.name}
+                    {pt.tag.name}
                   </a>
                 ))}
               </div>

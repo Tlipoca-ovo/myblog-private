@@ -146,7 +146,8 @@ class CloudflareR2Adapter implements StorageAdapter {
     if (file instanceof File) {
       body = await file.arrayBuffer();
     } else {
-      body = file;
+      // 将 Buffer 转换为 Uint8Array（BodyInit 可接受）
+      body = new Uint8Array(file);
     }
 
     const endpoint = `https://${this.accountId}.r2.cloudflarestorage.com/${this.bucketName}/${key}`;
@@ -213,7 +214,9 @@ class AwsS3Adapter implements StorageAdapter {
     // 建议使用 @aws-sdk/client-s3 的 PutObjectCommand
     // 当前简化实现无法正确签名 PUT 请求
     throw new Error(
-      "S3 upload 需要使用 @aws-sdk/client-s3。请使用 PutObjectCommand。"
+      `S3 upload 需要使用 @aws-sdk/client-s3。请使用 PutObjectCommand。file=${
+        file instanceof File ? file.name : "buffer"
+      }, path=${path}`
     );
   }
 
@@ -222,7 +225,7 @@ class AwsS3Adapter implements StorageAdapter {
     // 建议使用 @aws-sdk/client-s3 的 DeleteObjectCommand
     // 当前简化实现无法正确签名 DELETE 请求
     throw new Error(
-      "S3 delete 需要使用 @aws-sdk/client-s3。请使用 DeleteObjectCommand。"
+      `S3 delete 需要使用 @aws-sdk/client-s3。请使用 DeleteObjectCommand。key=${key}`
     );
   }
 
@@ -263,7 +266,7 @@ export function getStorageAdapter(): StorageAdapter {
  */
 export async function uploadFile(file: File | Buffer, path?: string): Promise<UploadResult> {
   const adapter = getStorageAdapter();
-  return adapter.upload(file, path);
+  return adapter.upload(file, path || "");
 }
 
 /**

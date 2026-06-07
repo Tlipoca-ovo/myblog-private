@@ -226,7 +226,7 @@ export interface LayoutConfig {
 /**
  * 获取布局配置
  */
-export function getLayoutConfig(layout: SiteConfig["layout"]): LayoutConfig {
+export function getLayoutConfig(layout?: Partial<LayoutConfig>): LayoutConfig {
   const presets: Record<string, LayoutConfig> = {
     wide: {
       containerMaxWidth: "1400px",
@@ -248,5 +248,5 @@ export function getLayoutConfig(layout: SiteConfig["layout"]): LayoutConfig {
     },
   };
 
-  return presets[layout?.containerWidth || "wide"] || presets.wide;
+  return presets[layout?.containerMaxWidth || "wide"] || presets.wide;
 }

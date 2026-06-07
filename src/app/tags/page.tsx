@@ -2,20 +2,29 @@ import { prisma } from "@/lib/db";
 import { BlogLayout } from "@/components/blog/BlogLayout";
 import { TagCloud } from "@/components/blog/TagCloud";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "标签" };
 
 export default async function TagsPage() {
+  await connection();
+
   const [tags, siteConfig] = await Promise.all([
     prisma.tag.findMany({
-      include: { _count: { select: { postTags: true } } },
+      include: { _count: { select: { posts: true } } },
       orderBy: { name: "asc" },
     }),
     prisma.siteSettings.findFirst(),
   ]);
 
-  const tagsWithCount = tags.map((t) => ({ ...t, postCount: t._count.postTags }));
+  const tagsWithCount = tags.map((t) => ({
+    id: t.id,
+    name: t.name,
+    slug: t.slug,
+    color: t.color || "",
+    postCount: t._count.posts,
+  }));
 
   return (
     <BlogLayout siteConfig={siteConfig || {}} showSidebar={false}>

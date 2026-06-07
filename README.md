@@ -18,7 +18,7 @@
 | 数据库 | Prisma ORM + SQLite (本地) / Cloudflare D1 (生产) |
 | 编辑器 | Tiptap |
 | 认证 | JWT |
-| 部署 | Cloudflare Pages |
+| 部署 | Cloudflare Workers (OpenNext) |
 
 ## 环境要求
 
@@ -86,7 +86,7 @@ npm run dev
 
 ---
 
-## 生产环境部署（Cloudflare Pages）
+## 生产环境部署（Cloudflare Workers）
 
 ### 1. 创建 Cloudflare D1 数据库
 
@@ -94,17 +94,24 @@ npm run dev
 
 ### 2. 配置 wrangler.toml
 
-编辑项目根目录的 `wrangler.toml`（需自行创建，参考模板）：
+编辑项目根目录的 `wrangler.toml`：
 
 ```toml
 name = "blog-template-api"
-compatibility_date = "2024-01-01"
-pages_build_output_dir = ".next"
+main = ".open-next/worker.js"
+compatibility_date = "2026-06-07"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[[services]]
+binding = "WORKER_SELF_REFERENCE"
+service = "blog-template-api"
 
 [vars]
-JWT_SECRET = { default = "", description = "使用 `wrangler secret put JWT_SECRET` 设置" }
 DATABASE_URL = "libsql://<account-id>.cloudflare.com/<database-name>"
-DATABASE_AUTH_TOKEN = ""
 
 [[d1_databases]]
 binding = "blog_template_db"
@@ -112,11 +119,11 @@ database_name = "<你的数据库名称>"
 database_id = "<你的数据库 ID>"
 ```
 
-> **注意**：`wrangler.toml` 包含敏感信息，请勿将其提交到公共仓库。已通过 `.gitignore` 排除。
+> **注意**：不要把真实 `JWT_SECRET` 写入 `wrangler.toml`，请使用 `wrangler secret put JWT_SECRET` 注入。
 
 ### 3. 设置环境变量
 
-在 Cloudflare Pages Dashboard 中配置以下环境变量：
+在 Cloudflare Dashboard 中配置以下环境变量：
 
 | 变量名 | 说明 |
 |--------|------|
@@ -130,20 +137,19 @@ database_id = "<你的数据库 ID>"
 npx wrangler d1 migrations apply blog-template-db --remote
 ```
 
-### 5. 部署到 Cloudflare Pages
+### 5. 部署到 Cloudflare Workers
 
-方式一：通过 GitHub 集成（推荐）
+方式一：通过 Git 集成（推荐）
 
 1. 将项目推送到 GitHub
-2. 在 Cloudflare Pages 中选择 GitHub 仓库进行部署
+2. 在 Cloudflare 中选择仓库进行部署
 3. 构建命令：`npm run build:cloudflare`
-4. 输出目录：`.next`
 
 方式二：手动部署
 
 ```bash
 npm run build:cloudflare
-npx wrangler pages deploy .next --project-name=blog-template
+npm run deploy:cloudflare
 ```
 
 ---
@@ -163,7 +169,7 @@ npx wrangler pages deploy .next --project-name=blog-template
 │   └── middleware/       # 中间件（管理员认证等）
 ├── public/              # 静态资源
 ├── .env.example          # 环境变量模板
-├── wrangler.toml         # Cloudflare Pages 部署配置
+├── wrangler.toml         # Cloudflare Workers 部署配置
 └── next.config.ts        # Next.js 配置
 ```
 

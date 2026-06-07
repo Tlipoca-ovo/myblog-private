@@ -1,11 +1,15 @@
 import { prisma } from "@/lib/db";
 import { BlogLayout } from "@/components/blog/BlogLayout";
+import Image from "next/image";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "友链" };
 
 export default async function FriendsPage() {
+  await connection();
+
   let friendLinks: Awaited<ReturnType<typeof prisma.friendLink.findMany>> = [];
   let siteConfig: Awaited<ReturnType<typeof prisma.siteSettings.findFirst>> = null;
 
@@ -37,10 +41,17 @@ export default async function FriendsPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.card}
-                title={link.description}
+                title={link.description || ""}
               >
                 {link.logo && (
-                  <img src={link.logo} alt={link.name} className={styles.logo} />
+                  <Image
+                    src={link.logo}
+                    alt={link.name}
+                    width={40}
+                    height={40}
+                    className={styles.logo}
+                    unoptimized
+                  />
                 )}
                 <div className={styles.info}>
                   <span className={styles.name}>{link.name}</span>

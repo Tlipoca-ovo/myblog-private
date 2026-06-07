@@ -1,13 +1,13 @@
-import { Request } from "next/dist/server/web/spec-compliant/request";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import type { SignOptions } from "jsonwebtoken";
 import { prisma } from "./db";
 
 // ============================================
 // 密钥配置
 // ============================================
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || "7d") as SignOptions["expiresIn"];
 const BCRYPT_ROUNDS = 12;
 
 // ============================================
@@ -23,7 +23,7 @@ export interface AuthResult {
   success: boolean;
   token?: string;
   user?: {
-    id: string;
+    id: number;
     username: string;
     nickname: string;
   };
@@ -155,7 +155,7 @@ export async function verifyAdminRequest(request: Request): Promise<JwtPayload |
 /**
  * 获取管理员信息（通过 token）
  */
-export async function getAdminFromToken(token: string): Promise<{ id: string; username: string; nickname: string } | null> {
+export async function getAdminFromToken(token: string): Promise<{ id: number; username: string; nickname: string } | null> {
   const payload = verifyToken(token);
   if (!payload) {
     return null;

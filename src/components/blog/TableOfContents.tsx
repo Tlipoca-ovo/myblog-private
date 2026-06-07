@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { TocItem } from "@/types/blog";
 import styles from "./TableOfContents.module.css";
 
@@ -8,29 +8,19 @@ interface TableOfContentsProps {
   content: string;
 }
 
+function extractTocItems(content: string): TocItem[] {
+  const headingPattern = /<h([1-6])(?:\s[^>]*)?>(.*?)<\/h\1>/gi;
+  return Array.from(content.matchAll(headingPattern), (match, index) => {
+    const [heading, level, rawText] = match;
+    const id = heading.match(/\sid=["']([^"']+)["']/i)?.[1] || `heading-${index}`;
+    const text = rawText.replace(/<[^>]*>/g, "").trim();
+    return { id, text, level: Number(level) };
+  }).filter((item) => item.text.length > 0);
+}
+
 export function TableOfContents({ content }: TableOfContentsProps) {
-  const [items, setItems] = useState<TocItem[]>([]);
+  const items = useMemo(() => extractTocItems(content), [content]);
   const [activeId, setActiveId] = useState<string>("");
-
-  useEffect(() => {
-    // 从 HTML 内容中提取标题
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
-    const headings = doc.querySelectorAll("h1, h2, h3, h4, h5, h6");
-
-    const toc: TocItem[] = [];
-    headings.forEach((heading, index) => {
-      const id = heading.id || `heading-${index}`;
-      if (!heading.id) heading.id = id;
-      toc.push({
-        id,
-        text: heading.textContent || "",
-        level: parseInt(heading.tagName[1]),
-      });
-    });
-
-    setItems(toc);
-  }, [content]);
 
   useEffect(() => {
     if (items.length === 0) return;

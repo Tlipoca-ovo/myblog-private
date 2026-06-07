@@ -10,7 +10,7 @@ import { prisma } from "@/lib/db";
 /**
  * 验证请求是否为已认证的管理员请求
  */
-export function withAuth(handler: (req: NextRequest, userId: string) => Promise<Response>) {
+export function withAuth(handler: (req: NextRequest, userId: number) => Promise<Response>) {
   return async (req: NextRequest) => {
     const token = extractToken(req as unknown as Request);
 
@@ -59,12 +59,12 @@ export function withAuth(handler: (req: NextRequest, userId: string) => Promise<
 /**
  * 从请求中获取当前用户 ID
  */
-export function getUserId(req: NextRequest): string | null {
+export function getUserId(req: NextRequest): number | null {
   const token = extractToken(req as unknown as Request);
   if (!token) return null;
 
   const payload = verifyToken(token);
-  return payload?.userId || null;
+  return payload?.userId ?? null;
 }
 
 /**

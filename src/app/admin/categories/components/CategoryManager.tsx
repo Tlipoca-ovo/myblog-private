@@ -6,7 +6,7 @@ import { Plus, Edit, Trash2, GripVertical } from "lucide-react";
 import styles from "./CategoryManager.module.css";
 
 interface Category {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   sortOrder: number;
@@ -19,7 +19,7 @@ interface CategoryManagerProps {
 export function CategoryManager({ initialCategories }: CategoryManagerProps) {
   const router = useRouter();
   const [categories] = useState(initialCategories);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [editSlug, setEditSlug] = useState("");
   const [isCreating, setIsCreating] = useState(false);
@@ -53,7 +53,7 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
     }
   };
 
-  const handleUpdate = async (id: string) => {
+  const handleUpdate = async (id: number) => {
     if (!editName.trim()) return;
     setSaving(true);
     setError("");
@@ -76,7 +76,7 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (!confirm("确定要删除这个分类吗？文章不会被删除。")) return;
     const res = await fetch(`/api/categories/${id}`, { method: "DELETE", credentials: "include" });
     if (res.ok) {

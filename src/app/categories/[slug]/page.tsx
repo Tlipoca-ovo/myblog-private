@@ -3,7 +3,9 @@ import { prisma } from "@/lib/db";
 import { BlogLayout } from "@/components/blog/BlogLayout";
 import { PostCard } from "@/components/blog/PostCard";
 import { Pagination } from "@/components/blog/Pagination";
+import { mapPostToCardPost, postCardInclude, type PostCardRecord } from "@/lib/post-mapper";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import styles from "./page.module.css";
 
 interface CategoryPostPageProps {
@@ -18,13 +20,15 @@ export async function generateMetadata({ params }: CategoryPostPageProps): Promi
 }
 
 export default async function CategoryPostPage({ params, searchParams }: CategoryPostPageProps) {
+  await connection();
+
   const { slug } = await params;
   const sp = await searchParams;
   const currentPage = Math.max(1, parseInt(sp.page || "1", 10));
   const pageSize = 9;
 
   let category: Awaited<ReturnType<typeof prisma.category.findUnique>> = null;
-  let posts: Awaited<ReturnType<typeof prisma.post.findMany>> = [];
+  let posts: PostCardRecord[] = [];
   let total = 0;
   let categories: Awaited<ReturnType<typeof prisma.category.findMany>> = [];
   let tagsWithCount: { id: number; name: string; slug: string; color: string; postCount: number }[] = [];
@@ -40,20 +44,16 @@ export default async function CategoryPostPage({ params, searchParams }: Categor
   try {
     const [fetchedPosts, fetchedTotal, fetchedCategories, fetchedTags, fetchedConfig] = await Promise.all([
       prisma.post.findMany({
-        where: { status: "published", categories: { some: { id: category.id } } },
-        include: {
-          author: { select: { id: true, username: true, nickname: true, avatar: true } },
-          categories: { select: { id: true, name: true, slug: true } },
-          tags: { select: { id: true, name: true, slug: true, color: true } },
-        },
-        orderBy: { publishedAt: "desc" },
+        where: { status: "published", categories: { some: { category: { id: category.id } } } },
+        include: postCardInclude,
+        orderBy: { createdAt: "desc" },
         skip: (currentPage - 1) * pageSize,
         take: pageSize,
       }),
-      prisma.post.count({ where: { status: "published", categories: { some: { id: category.id } } } }),
+      prisma.post.count({ where: { status: "published", categories: { some: { category: { id: category.id } } } } }),
       prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
       prisma.tag.findMany({
-        include: { _count: { select: { postTags: true } } },
+        include: { _count: { select: { posts: true } } },
         orderBy: { name: "asc" },
       }),
       prisma.siteSettings.findFirst(),
@@ -61,7 +61,7 @@ export default async function CategoryPostPage({ params, searchParams }: Categor
     posts = fetchedPosts;
     total = fetchedTotal;
     categories = fetchedCategories;
-    tagsWithCount = fetchedTags.map((t) => ({ ...t, postCount: t._count.postTags }));
+    tagsWithCount = fetchedTags.map((t) => ({ id: t.id, name: t.name, slug: t.slug, color: t.color || "", postCount: t._count.posts }));
     siteConfig = fetchedConfig;
   } catch (error) {
     console.error("分类文章页数据加载失败:", error instanceof Error ? error.message : error);
@@ -69,8 +69,11 @@ export default async function CategoryPostPage({ params, searchParams }: Categor
 
   const totalPages = Math.ceil(total / pageSize);
 
+  // 将 Prisma 返回的 null 转换为 undefined，避免类型不匹配
+  const safeCategories = categories.map((c) => ({ ...c, description: c.description ?? undefined }));
+
   return (
-    <BlogLayout siteConfig={siteConfig || {}} categories={categories} tags={tagsWithCount}>
+    <BlogLayout siteConfig={siteConfig || {}} categories={safeCategories} tags={tagsWithCount}>
       <div className={styles.page}>
         <div className={styles.header}>
           <h1 className={styles.title}>{category.name}</h1>
@@ -83,17 +86,14 @@ export default async function CategoryPostPage({ params, searchParams }: Categor
         {posts.length > 0 ? (
           <>
             <div className={styles.grid}>
-              {posts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  post={{
-                    ...post,
-                    createdAt: post.createdAt.toISOString(),
-                    updatedAt: post.updatedAt.toISOString(),
-                    publishedAt: post.publishedAt?.toISOString(),
-                  }}
-                />
-              ))}
+              {posts.map((post) => {
+                return (
+                  <PostCard
+                    key={post.id}
+                    post={mapPostToCardPost(post)}
+                  />
+                );
+              })}
             </div>
             {totalPages > 1 && (
               <Pagination currentPage={currentPage} totalPages={totalPages} baseUrl={`/categories/${slug}`} />

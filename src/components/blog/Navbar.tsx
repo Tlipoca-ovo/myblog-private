@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Sun, Moon, Search } from "lucide-react";
@@ -33,15 +34,13 @@ export function Navbar({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
-
   const toggleTheme = () => {
     if (theme === "light") setTheme("dark");
     else if (theme === "dark") setTheme("auto");
     else setTheme("light");
   };
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const defaultNavLinks = [
     { label: "首页", href: "/" },
@@ -59,7 +58,14 @@ export function Navbar({
         {/* Logo */}
         <Link href="/" className={styles.logo}>
           {siteLogo ? (
-            <img src={siteLogo} alt={siteName} className={styles.logoImage} />
+            <Image
+              src={siteLogo}
+              alt={siteName}
+              width={120}
+              height={32}
+              className={styles.logoImage}
+              unoptimized
+            />
           ) : (
             <span className={styles.logoText}>{siteName}</span>
           )}
@@ -119,6 +125,7 @@ export function Navbar({
               key={link.href}
               href={link.href}
               className={`${styles.mobileNavLink} ${pathname === link.href ? styles.active : ""}`}
+              onClick={closeMobileMenu}
             >
               {link.label}
             </Link>

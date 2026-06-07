@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { MessageSquare, Send } from "lucide-react";
 import styles from "./Comments.module.css";
 
@@ -51,7 +52,7 @@ export function Comments({ postId, comments = [] }: CommentsProps) {
   };
 
   return (
-    <section className={styles.comments}>
+    <section className={styles.comments} data-post-id={postId}>
       <h2 className={styles.title}>
         <MessageSquare size={20} />
         评论 ({commentList.length})
@@ -65,7 +66,13 @@ export function Comments({ postId, comments = [] }: CommentsProps) {
               <div className={styles.commentHeader}>
                 <div className={styles.avatar}>
                   {comment.avatar ? (
-                    <img src={comment.avatar} alt={comment.author} />
+                    <Image
+                      src={comment.avatar}
+                      alt={comment.author}
+                      width={36}
+                      height={36}
+                      unoptimized
+                    />
                   ) : (
                     <span>{comment.author[0]?.toUpperCase()}</span>
                   )}

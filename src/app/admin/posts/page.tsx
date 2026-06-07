@@ -20,15 +20,15 @@ export default async function PostsPage({ searchParams }: Props) {
     where.title = { contains: keyword };
   }
   if (categorySlug) {
-    where.category = { slug: categorySlug };
+    where.categories = { some: { category: { slug: categorySlug } } };
   }
 
   const [posts, total, categories] = await Promise.all([
     prisma.post.findMany({
       where,
       include: {
-        category: { select: { id: true, name: true, slug: true } },
-        tags: { select: { id: true, name: true, slug: true } },
+        categories: { include: { category: { select: { id: true, name: true, slug: true } } } },
+        tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
       },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * pageSize,
@@ -41,21 +41,41 @@ export default async function PostsPage({ searchParams }: Props) {
     }),
   ]);
 
-  return (
-    <div>
-      <AdminHeader
-        title="文章管理"
-        description="管理博客文章"
-        actions={
-          <Link href="/admin/posts/new" className="admin-button-primary">
-            <Plus size={18} />
-            新建文章
-          </Link>
-        }
-      />
+  interface PostForList {
+  id: number;
+  title: string;
+  slug: string;
+  published: boolean;
+  createdAt: Date;
+  category: { id: number; name: string; slug: string } | null;
+  tags: { id: number; name: string; slug: string }[];
+}
 
-      <PostList
-        posts={posts}
+const mappedPosts: PostForList[] = posts.map((p) => ({
+  id: p.id,
+  title: p.title,
+  slug: p.slug,
+  published: p.status === "published",
+  createdAt: p.createdAt,
+  category: p.categories[0]?.category ?? null,
+  tags: p.tags.map((t) => t.tag),
+}));
+
+return (
+  <div>
+    <AdminHeader
+      title="文章管理"
+      description="管理博客文章"
+      actions={
+        <Link href="/admin/posts/new" className="admin-button-primary">
+          <Plus size={18} />
+          新建文章
+        </Link>
+      }
+    />
+
+    <PostList
+      posts={mappedPosts}
         total={total}
         page={page}
         pageSize={pageSize}

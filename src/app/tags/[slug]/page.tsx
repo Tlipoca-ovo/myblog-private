@@ -3,7 +3,9 @@ import { prisma } from "@/lib/db";
 import { BlogLayout } from "@/components/blog/BlogLayout";
 import { PostCard } from "@/components/blog/PostCard";
 import { Pagination } from "@/components/blog/Pagination";
+import { mapPostToCardPost, postCardInclude, type PostCardRecord } from "@/lib/post-mapper";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import styles from "./page.module.css";
 
 interface TagPostPageProps {
@@ -18,13 +20,15 @@ export async function generateMetadata({ params }: TagPostPageProps): Promise<Me
 }
 
 export default async function TagPostPage({ params, searchParams }: TagPostPageProps) {
+  await connection();
+
   const { slug } = await params;
   const sp = await searchParams;
   const currentPage = Math.max(1, parseInt(sp.page || "1", 10));
   const pageSize = 9;
 
   let tag: Awaited<ReturnType<typeof prisma.tag.findUnique>> = null;
-  let posts: Awaited<ReturnType<typeof prisma.post.findMany>> = [];
+  let posts: PostCardRecord[] = [];
   let total = 0;
   let categories: Awaited<ReturnType<typeof prisma.category.findMany>> = [];
   let tagsWithCount: { id: number; name: string; slug: string; color: string; postCount: number }[] = [];
@@ -40,20 +44,16 @@ export default async function TagPostPage({ params, searchParams }: TagPostPageP
   try {
     const [fetchedPosts, fetchedTotal, fetchedCategories, fetchedTags, fetchedConfig] = await Promise.all([
       prisma.post.findMany({
-        where: { status: "published", tags: { some: { id: tag.id } } },
-        include: {
-          author: { select: { id: true, username: true, nickname: true, avatar: true } },
-          categories: { select: { id: true, name: true, slug: true } },
-          tags: { select: { id: true, name: true, slug: true, color: true } },
-        },
-        orderBy: { publishedAt: "desc" },
+        where: { status: "published", tags: { some: { tagId: tag.id } } },
+        include: postCardInclude,
+        orderBy: { createdAt: "desc" },
         skip: (currentPage - 1) * pageSize,
         take: pageSize,
       }),
-      prisma.post.count({ where: { status: "published", tags: { some: { id: tag.id } } } }),
+      prisma.post.count({ where: { status: "published", tags: { some: { tagId: tag.id } } } }),
       prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
       prisma.tag.findMany({
-        include: { _count: { select: { postTags: true } } },
+        include: { _count: { select: { posts: true } } },
         orderBy: { name: "asc" },
       }),
       prisma.siteSettings.findFirst(),
@@ -61,7 +61,13 @@ export default async function TagPostPage({ params, searchParams }: TagPostPageP
     posts = fetchedPosts;
     total = fetchedTotal;
     categories = fetchedCategories;
-    tagsWithCount = fetchedTags.map((t) => ({ ...t, postCount: t._count.postTags }));
+    tagsWithCount = fetchedTags.map((t) => ({
+      id: t.id,
+      name: t.name,
+      slug: t.slug,
+      color: t.color || "",
+      postCount: t._count.posts,
+    }));
     siteConfig = fetchedConfig;
   } catch (error) {
     console.error("标签文章页数据加载失败:", error instanceof Error ? error.message : error);
@@ -69,8 +75,11 @@ export default async function TagPostPage({ params, searchParams }: TagPostPageP
 
   const totalPages = Math.ceil(total / pageSize);
 
+  // 将 Prisma 返回的 null 转换为 undefined，避免类型不匹配
+  const safeCategories = categories.map((c) => ({ ...c, description: c.description ?? undefined }));
+
   return (
-    <BlogLayout siteConfig={siteConfig || {}} categories={categories} tags={tagsWithCount}>
+    <BlogLayout siteConfig={siteConfig || {}} categories={safeCategories} tags={tagsWithCount}>
       <div className={styles.page}>
         <div className={styles.header}>
           <span className={styles.tag} style={{ "--tag-color": tag.color } as React.CSSProperties}>
@@ -85,12 +94,7 @@ export default async function TagPostPage({ params, searchParams }: TagPostPageP
               {posts.map((post) => (
                 <PostCard
                   key={post.id}
-                  post={{
-                    ...post,
-                    createdAt: post.createdAt.toISOString(),
-                    updatedAt: post.updatedAt.toISOString(),
-                    publishedAt: post.publishedAt?.toISOString(),
-                  }}
+                  post={mapPostToCardPost(post)}
                 />
               ))}
             </div>

@@ -1,25 +1,26 @@
 import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaLibSQL } from "@prisma/adapter-libsql";
-import { createClient } from "@libsql/client";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 
-// 创建 libsql 适配器，支持本地开发和生产环境
+// ============================================
+// Prisma 客户端工厂
+// 支持本地开发（SQLite）和生产环境（Cloudflare D1）
+// ============================================
 function createPrismaClient() {
-  // 如果存在 DATABASE_URL 环境变量（生产环境/D1），使用它
-  // 否则使用本地文件路径（本地开发）
-  const databaseUrl = process.env.DATABASE_URL || "file:dev.db";
+  // 优先级：D1 URL（生产）> LIBSQL_URL（环境变量）> DATABASE_URL > 本地文件
+  const databaseUrl =
+    process.env.LIBSQL_URL ||
+    process.env.DATABASE_URL ||
+    "file:dev.db";
 
-  // 对于 D1 URL (libsql://...) 使用 authToken
-  // 对于本地文件路径不需要 authToken
-  const authToken = databaseUrl.startsWith("libsql://")
-    ? process.env.DATABASE_AUTH_TOKEN
-    : undefined;
+  const authToken =
+    process.env.LIBSQL_AUTH_TOKEN ||
+    process.env.DATABASE_AUTH_TOKEN;
 
-  const client = createClient({
+  const adapter = new PrismaLibSql({
     url: databaseUrl,
-    authToken: authToken,
+    authToken: authToken || undefined,
   });
 
-  const adapter = new PrismaLibSQL(client);
   return new PrismaClient({ adapter });
 }
 

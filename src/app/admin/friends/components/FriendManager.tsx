@@ -7,11 +7,11 @@ import { Plus, Edit, Trash2, ExternalLink } from "lucide-react";
 import styles from "./FriendManager.module.css";
 
 interface FriendLink {
-  id: string;
+  id: number;
   name: string;
   url: string;
-  description?: string;
-  avatar?: string;
+  description?: string | null;
+  avatar?: string | null;
   sortOrder: number;
 }
 
@@ -22,7 +22,7 @@ interface FriendManagerProps {
 export function FriendManager({ initialFriends }: FriendManagerProps) {
   const router = useRouter();
   const [friends] = useState(initialFriends);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [editUrl, setEditUrl] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -67,7 +67,7 @@ export function FriendManager({ initialFriends }: FriendManagerProps) {
     }
   };
 
-  const handleUpdate = async (id: string) => {
+  const handleUpdate = async (id: number) => {
     if (!editName.trim() || !editUrl.trim()) return;
     setSaving(true);
     setError("");
@@ -95,7 +95,7 @@ export function FriendManager({ initialFriends }: FriendManagerProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (!confirm("确定要删除这个友链吗？")) return;
     const res = await fetch(`/api/friends/${id}`, { method: "DELETE", credentials: "include" });
     if (res.ok) {

@@ -16,10 +16,10 @@ export default async function EditPostPage({ params }: Props) {
 
   try {
     post = await prisma.post.findUnique({
-      where: { id },
+      where: { id: parseInt(id, 10) },
       include: {
-        category: { select: { id: true } },
-        tags: { select: { id: true, name: true, slug: true } },
+        tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
+        categories: { include: { category: { select: { id: true, name: true, slug: true } } } },
       },
     });
     categories = await prisma.category.findMany({
@@ -48,11 +48,11 @@ export default async function EditPostPage({ params }: Props) {
           id: post.id,
           title: post.title,
           content: post.content,
-          excerpt: post.excerpt || "",
+          excerpt: post.description || "",
           slug: post.slug,
-          published: post.published,
-          categoryId: post.categoryId || "",
-          tagIds: post.tags.map((t) => t.id),
+          published: post.status === "published",
+          categoryId: post.categories[0]?.category.id ?? 0,
+          tagIds: post.tags.map((t) => t.tag.id),
           coverImage: post.coverImage || "",
         }}
         categories={categories}

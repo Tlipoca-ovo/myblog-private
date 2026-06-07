@@ -2,14 +2,12 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import dynamic from "next/dynamic";
-import { AdminHeader } from "@/components/admin/AdminHeader";
 import {
   Save,
   Send,
   ArrowLeft,
-  Image as ImageIcon,
-  Link as LinkIcon,
 } from "lucide-react";
 import styles from "./PostEditor.module.css";
 
@@ -19,25 +17,25 @@ const MDEditor = dynamic(
 );
 
 interface PostData {
-  id: string;
+  id: number;
   title: string;
   content: string;
   excerpt: string;
   slug: string;
   published: boolean;
-  categoryId: string;
-  tagIds: string[];
+  categoryId: number | string;
+  tagIds: number[];
   coverImage: string;
 }
 
 interface Category {
-  id: string;
+  id: number;
   name: string;
   slug: string;
 }
 
 interface Tag {
-  id: string;
+  id: number;
   name: string;
   slug: string;
 }
@@ -55,9 +53,9 @@ export function PostEditor({ mode, post, categories, tags }: PostEditorProps) {
   const [content, setContent] = useState(post?.content || "");
   const [excerpt, setExcerpt] = useState(post?.excerpt || "");
   const [slug, setSlug] = useState(post?.slug || "");
-  const [published, setPublished] = useState(post?.published ?? false);
+  const [published] = useState(post?.published ?? false);
   const [categoryId, setCategoryId] = useState(post?.categoryId || "");
-  const [selectedTags, setSelectedTags] = useState<string[]>(post?.tagIds || []);
+  const [selectedTags, setSelectedTags] = useState<number[]>(post?.tagIds || []);
   const [coverImage, setCoverImage] = useState(post?.coverImage || "");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -72,7 +70,7 @@ export function PostEditor({ mode, post, categories, tags }: PostEditorProps) {
     setSlug(base);
   }, [title]);
 
-  const handleTagToggle = (tagId: string) => {
+  const handleTagToggle = (tagId: number) => {
     setSelectedTags((prev) =>
       prev.includes(tagId)
         ? prev.filter((id) => id !== tagId)
@@ -283,10 +281,13 @@ export function PostEditor({ mode, post, categories, tags }: PostEditorProps) {
               className={styles.panelInput}
             />
             {coverImage && (
-              <img
+              <Image
                 src={coverImage}
                 alt="封面预览"
+                width={400}
+                height={120}
                 className={styles.coverPreview}
+                unoptimized
               />
             )}
           </div>

@@ -12,7 +12,7 @@ const MDEditor = dynamic(
 );
 
 interface Page {
-  id: string;
+  id: number;
   title: string;
   slug: string;
   content: string;
@@ -25,7 +25,7 @@ interface PageManagerProps {
 export function PageManager({ initialPages }: PageManagerProps) {
   const router = useRouter();
   const [pages] = useState(initialPages);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editSlug, setEditSlug] = useState("");
   const [editContent, setEditContent] = useState("");
@@ -62,7 +62,7 @@ export function PageManager({ initialPages }: PageManagerProps) {
     }
   };
 
-  const handleUpdate = async (id: string) => {
+  const handleUpdate = async (id: number) => {
     if (!editTitle.trim() || !editSlug.trim()) return;
     setSaving(true);
     setError("");
@@ -85,7 +85,7 @@ export function PageManager({ initialPages }: PageManagerProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (!confirm("确定要删除这个页面吗？")) return;
     const res = await fetch(`/api/pages/${id}`, { method: "DELETE", credentials: "include" });
     if (res.ok) {

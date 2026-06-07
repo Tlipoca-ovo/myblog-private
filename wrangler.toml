@@ -1,16 +1,21 @@
-name = "blog-template-api"
-compatibility_date = "2024-01-01"
-pages_build_output_dir = ".next"
+# Cloudflare Pages 配置文件
+name = "blog-template"
+pages_build_output_dir = ".open-next"
+compatibility_date = "2026-06-07"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
-# Cloudflare Pages 环境变量配置
-[vars]
-JWT_SECRET = { default = "dev-secret-change-in-production", description = "使用 `wrangler secret put JWT_SECRET` 在生产环境注入" }
-DATABASE_URL = "libsql://99f01fcdf59bfcdf7464828b155affc3.cloudflare.com/blog-template-db"
-
-# D1 数据库绑定
 [[d1_databases]]
-binding = "blog_template_db"
-database_name = "blog-template-db"
-database_id = "3768b96b-b60f-4368-9f15-c3deb744a61d"
+binding = "D1"
+database_name = "blog-template-new-db"
+database_id = "9b915a35-df44-4b9d-bede-6d6d68248684"
+migrations_dir = "migrations"
+migrations_pattern = "migrations/*/migration.sql"
 
-account_id = "99f01fcdf59bfcdf7464828b155affc3"
+# Cloudflare 环境变量配置
+[vars]
+DATABASE_ID = "9b915a35-df44-4b9d-bede-6d6d68248684"
+TZ = "Asia/Shanghai"
+NODE_ENV = "production"
+JWT_EXPIRES_IN = "7d"
+AUTH_COOKIE_NAME = "blog_auth"
+AUTH_COOKIE_MAX_AGE = "604800"

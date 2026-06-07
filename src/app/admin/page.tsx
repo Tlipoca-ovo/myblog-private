@@ -18,14 +18,14 @@ export default async function AdminDashboard() {
       prisma.category.count(),
       prisma.tag.count(),
       prisma.friendLink.count(),
-      prisma.post.aggregate({ _sum: { viewCount: true } }),
+      prisma.post.aggregate({ _sum: { views: true } }),
       prisma.comment.count(),
     ]);
     postCount = results[0];
     categoryCount = results[1];
     tagCount = results[2];
     friendCount = results[3];
-    totalViews = results[4]._sum.viewCount || 0;
+    totalViews = results[4]._sum.views || 0;
     commentCount = results[5];
   } catch (error) {
     console.error("仪表盘数据加载失败:", error instanceof Error ? error.message : error);

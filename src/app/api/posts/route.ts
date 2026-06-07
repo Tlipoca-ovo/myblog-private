@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         where,
         include: {
           author: { select: { id: true, username: true, nickname: true } },
-          category: { select: { id: true, name: true, slug: true } },
+          categories: { include: { category: { select: { id: true, name: true, slug: true } } } },
           tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
         },
         orderBy: { createdAt: "desc" },
@@ -58,6 +58,7 @@ export async function GET(request: NextRequest) {
       posts.map((p) => ({
         ...p,
         excerpt: p.description,  // 数据库字段是 description，API 兼容用 excerpt
+        category: p.categories[0]?.category ?? null,
         tags: p.tags.map((pt) => pt.tag),
       })),
       page,
@@ -118,13 +119,14 @@ export async function POST(request: NextRequest) {
       },
       include: {
         author: { select: { id: true, username: true, nickname: true } },
-        category: { select: { id: true, name: true, slug: true } },
+        categories: { include: { category: { select: { id: true, name: true, slug: true } } } },
         tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
       },
     });
 
     return NextResponse.json(successResponse({
       ...post,
+      category: post.categories[0]?.category ?? null,
       tags: post.tags.map((pt) => pt.tag),
     }));
   } catch (error) {

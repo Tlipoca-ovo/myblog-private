@@ -1,40 +1,40 @@
 // 文章类型
 export interface Post {
-  id: string;
+  id: number;
   title: string;
   slug: string;
   excerpt: string;
   content: string;
   coverImage: string;
-  status: "draft" | "published" | "archived";
+  status: "draft" | "published";
   viewCount: number;
-  likeCount: number;
   author: {
-    id: string;
+    id: number;
     username: string;
     nickname: string;
     avatar: string;
   };
-  categories: { id: string; name: string; slug: string }[];
-  tags: { id: string; name: string; slug: string; color: string }[];
+  categories: { id: number; name: string; slug: string }[];
+  tags: { id: number; name: string; slug: string; color: string }[];
   createdAt: string;
   updatedAt: string;
-  publishedAt?: string;
+  isPage?: boolean;
 }
+
 
 // 分类类型
 export interface Category {
-  id: string;
+  id: number;
   name: string;
   slug: string;
-  description: string;
+  description?: string;
   sortOrder: number;
   postCount?: number;
 }
 
 // 标签类型
 export interface Tag {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   color: string;
@@ -43,7 +43,7 @@ export interface Tag {
 
 // 页面类型
 export interface Page {
-  id: string;
+  id: number;
   title: string;
   slug: string;
   content: string;
@@ -53,10 +53,10 @@ export interface Page {
 
 // 友链类型
 export interface FriendLink {
-  id: string;
+  id: number;
   name: string;
   url: string;
-  description: string;
+  description?: string;
   logo: string;
   isActive: boolean;
 }

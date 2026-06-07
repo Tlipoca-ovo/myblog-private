@@ -14,19 +14,19 @@ import {
 import styles from "./PostList.module.css";
 
 interface Category {
-  id: string;
+  id: number;
   name: string;
   slug: string;
 }
 
 interface Post {
-  id: string;
+  id: number;
   title: string;
   slug: string;
   published: boolean;
   createdAt: Date;
   category: Category | null;
-  tags: { id: string; name: string; slug: string }[];
+  tags: { id: number; name: string; slug: string }[];
 }
 
 interface PostListProps {
@@ -52,7 +52,7 @@ export function PostList({
   const searchParams = useSearchParams();
   const [keywordInput, setKeywordInput] = useState(keyword);
   const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +77,7 @@ export function PostList({
     router.push(`/admin/posts?${params.toString()}`);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (!confirm("确定要删除这篇文章吗？此操作不可恢复。")) return;
     setDeletingId(id);
     try {
@@ -113,7 +113,7 @@ export function PostList({
     }
   };
 
-  const toggleSelect = (id: string) => {
+  const toggleSelect = (id: number) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );

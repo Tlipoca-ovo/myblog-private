@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/db";
 import { BlogLayout } from "@/components/blog/BlogLayout";
 import { PostCard } from "@/components/blog/PostCard";
+import { mapPostToCardPost, postCardInclude, type PostCardRecord } from "@/lib/post-mapper";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import styles from "./page.module.css";
 
 interface SearchPageProps {
@@ -13,10 +15,12 @@ export function generateMetadata({ searchParams }: SearchPageProps): Promise<Met
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
+  await connection();
+
   const { q } = await searchParams;
   const query = (q || "").trim();
 
-  let posts: Awaited<ReturnType<typeof prisma.post.findMany>> = [];
+  let posts: PostCardRecord[] = [];
   let siteConfig: Awaited<ReturnType<typeof prisma.siteSettings.findFirst>> = null;
 
   if (query) {
@@ -26,16 +30,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           status: "published",
           OR: [
             { title: { contains: query } },
-            { excerpt: { contains: query } },
+            { description: { contains: query } },
             { content: { contains: query } },
           ],
         },
-        include: {
-          author: { select: { id: true, username: true, nickname: true, avatar: true } },
-          categories: { select: { id: true, name: true, slug: true } },
-          tags: { select: { id: true, name: true, slug: true, color: true } },
-        },
-        orderBy: { publishedAt: "desc" },
+        include: postCardInclude,
+        orderBy: { createdAt: "desc" },
       });
     } catch (error) {
       console.error("搜索数据加载失败:", error instanceof Error ? error.message : error);
@@ -62,19 +62,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 {posts.map((post) => (
                   <PostCard
                     key={post.id}
-                    post={{
-                      ...post,
-                      createdAt: post.createdAt.toISOString(),
-                      updatedAt: post.updatedAt.toISOString(),
-                      publishedAt: post.publishedAt?.toISOString(),
-                    }}
+                    post={mapPostToCardPost(post)}
                   />
                 ))}
               </div>
             </>
           ) : (
             <div className={styles.empty}>
-              <p>没有找到与 "{query}" 相关的文章</p>
+              <p>没有找到与 “{query}” 相关的文章</p>
               <p className={styles.tip}>试试其他关键词？</p>
             </div>
           )

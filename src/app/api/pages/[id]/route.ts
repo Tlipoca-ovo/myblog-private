@@ -3,14 +3,14 @@ import { prisma } from "@/lib/db";
 import { successResponse, errorResponse } from "@/lib/api-response";
 import { unauthorized, notFound, conflict } from "@/lib/api-error";
 import { extractToken, verifyToken } from "@/lib/auth";
-import { generateSlug } from "@/lib/slug";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function GET(_request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
-    const page = await prisma.page.findUnique({ where: { id } });
+    const idNum = parseInt(id, 10);
+    const page = await prisma.page.findUnique({ where: { id: idNum } });
     if (!page) return NextResponse.json(notFound("页面不存在").toJSON(), { status: 404 });
     return NextResponse.json(successResponse(page));
   } catch (error) {
@@ -26,10 +26,11 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       return NextResponse.json(unauthorized("认证失败").toJSON(), { status: 401 });
     }
     const { id } = await context.params;
+    const idNum = parseInt(id, 10);
     const body = await request.json();
     const { title, slug, content, isDefault, sortOrder } = body;
 
-    const existing = await prisma.page.findUnique({ where: { id } });
+    const existing = await prisma.page.findUnique({ where: { id: idNum } });
     if (!existing) return NextResponse.json(notFound("页面不存在").toJSON(), { status: 404 });
 
     const updateData: Record<string, unknown> = {};
@@ -43,7 +44,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       updateData.slug = slug;
     }
 
-    const page = await prisma.page.update({ where: { id }, data: updateData });
+    const page = await prisma.page.update({ where: { id: idNum }, data: updateData });
     return NextResponse.json(successResponse(page));
   } catch (error) {
     console.error("更新页面失败:", error instanceof Error ? error.message : error);
@@ -58,9 +59,10 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       return NextResponse.json(unauthorized("认证失败").toJSON(), { status: 401 });
     }
     const { id } = await context.params;
-    const existing = await prisma.page.findUnique({ where: { id } });
+    const idNum = parseInt(id, 10);
+    const existing = await prisma.page.findUnique({ where: { id: idNum } });
     if (!existing) return NextResponse.json(notFound("页面不存在").toJSON(), { status: 404 });
-    await prisma.page.delete({ where: { id } });
+    await prisma.page.delete({ where: { id: idNum } });
     return NextResponse.json(successResponse({ message: "页面已删除" }));
   } catch (error) {
     console.error("删除页面失败:", error instanceof Error ? error.message : error);

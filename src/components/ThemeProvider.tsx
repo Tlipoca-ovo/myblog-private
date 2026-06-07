@@ -16,6 +16,20 @@ const ThemeContext = createContext<ThemeContextType>({
   resolvedTheme: "light",
 });
 
+function isTheme(value: string | null): value is Theme {
+  return value === "light" || value === "dark" || value === "auto";
+}
+
+function getInitialTheme(defaultTheme: Theme): Theme {
+  if (typeof window === "undefined") return defaultTheme;
+  const stored = localStorage.getItem("blog-theme");
+  return isTheme(stored) ? stored : defaultTheme;
+}
+
+function getPrefersDark() {
+  return typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
 export function useTheme() {
   return useContext(ThemeContext);
 }
@@ -26,47 +40,24 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children, defaultTheme = "light" }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<Theme>(() => getInitialTheme(defaultTheme));
+  const [prefersDark, setPrefersDark] = useState(getPrefersDark);
+  const resolvedTheme: "light" | "dark" =
+    theme === "auto" ? (prefersDark ? "dark" : "light") : theme;
 
   useEffect(() => {
-    // 从 localStorage 恢复主题
-    const stored = localStorage.getItem("blog-theme") as Theme | null;
-    if (stored) {
-      setTheme(stored);
-    }
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e: MediaQueryListEvent) => setPrefersDark(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
   useEffect(() => {
-    // 解析实际主题
-    let actual: "light" | "dark" = "light";
-    if (theme === "auto") {
-      actual = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    } else {
-      actual = theme;
-    }
-    setResolvedTheme(actual);
-
-    // 应用到 document
     const root = document.documentElement;
     root.classList.remove("light", "dark");
-    root.classList.add(actual);
+    root.classList.add(resolvedTheme);
     localStorage.setItem("blog-theme", theme);
-  }, [theme]);
-
-  // 监听系统主题变化
-  useEffect(() => {
-    if (theme !== "auto") return;
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = (e: MediaQueryListEvent) => {
-      const actual = e.matches ? "dark" : "light";
-      setResolvedTheme(actual);
-      document.documentElement.classList.remove("light", "dark");
-      document.documentElement.classList.add(actual);
-    };
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, [theme]);
+  }, [resolvedTheme, theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>

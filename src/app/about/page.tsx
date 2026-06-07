@@ -1,11 +1,14 @@
 import { prisma } from "@/lib/db";
 import { BlogLayout } from "@/components/blog/BlogLayout";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "关于" };
 
 export default async function AboutPage() {
+  await connection();
+
   let page: Awaited<ReturnType<typeof prisma.page.findFirst>> = null;
   let siteConfig: Awaited<ReturnType<typeof prisma.siteSettings.findFirst>> = null;
 

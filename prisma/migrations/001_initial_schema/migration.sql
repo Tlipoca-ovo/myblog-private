@@ -1,0 +1,146 @@
+-- 初始数据库架构
+-- 由 Prisma Schema 生成
+
+-- AdminUser 表
+CREATE TABLE IF NOT EXISTS `AdminUser` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `username` TEXT NOT NULL,
+    `password` TEXT NOT NULL,
+    `nickname` TEXT NOT NULL DEFAULT '博主',
+    `avatar` TEXT,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS `AdminUser_username_key` ON `AdminUser`(`username`);
+
+-- Category 表
+CREATE TABLE IF NOT EXISTS `Category` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `name` TEXT NOT NULL,
+    `slug` TEXT NOT NULL,
+    `description` TEXT,
+    `sortOrder` INTEGER NOT NULL DEFAULT 0,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS `Category_name_key` ON `Category`(`name`);
+CREATE UNIQUE INDEX IF NOT EXISTS `Category_slug_key` ON `Category`(`slug`);
+CREATE INDEX IF NOT EXISTS `Category_slug_idx` ON `Category`(`slug`);
+
+-- Tag 表
+CREATE TABLE IF NOT EXISTS `Tag` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `name` TEXT NOT NULL,
+    `slug` TEXT NOT NULL,
+    `color` TEXT,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS `Tag_name_key` ON `Tag`(`name`);
+CREATE UNIQUE INDEX IF NOT EXISTS `Tag_slug_key` ON `Tag`(`slug`);
+CREATE INDEX IF NOT EXISTS `Tag_slug_idx` ON `Tag`(`slug`);
+
+-- Post 表
+CREATE TABLE IF NOT EXISTS `Post` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `title` TEXT NOT NULL,
+    `slug` TEXT NOT NULL,
+    `content` TEXT NOT NULL DEFAULT '',
+    `description` TEXT,
+    `coverImage` TEXT,
+    `status` TEXT NOT NULL DEFAULT 'draft',
+    `views` INTEGER NOT NULL DEFAULT 0,
+    `isPage` INTEGER NOT NULL DEFAULT 0,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `authorId` INTEGER NOT NULL,
+    CONSTRAINT `Post_authorId_fkey` FOREIGN KEY (`authorId`) REFERENCES `AdminUser`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS `Post_slug_key` ON `Post`(`slug`);
+CREATE INDEX IF NOT EXISTS `Post_status_idx` ON `Post`(`status`);
+CREATE INDEX IF NOT EXISTS `Post_authorId_idx` ON `Post`(`authorId`);
+
+-- PostCategory 表 (多对多关系表)
+CREATE TABLE IF NOT EXISTS `PostCategory` (
+    `postId` INTEGER NOT NULL,
+    `categoryId` INTEGER NOT NULL,
+    PRIMARY KEY (`postId`, `categoryId`),
+    CONSTRAINT `PostCategory_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `PostCategory_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- PostTag 表 (多对多关系表)
+CREATE TABLE IF NOT EXISTS `PostTag` (
+    `postId` INTEGER NOT NULL,
+    `tagId` INTEGER NOT NULL,
+    PRIMARY KEY (`postId`, `tagId`),
+    CONSTRAINT `PostTag_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `PostTag_tagId_fkey` FOREIGN KEY (`tagId`) REFERENCES `Tag`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Page 表
+CREATE TABLE IF NOT EXISTS `Page` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `title` TEXT NOT NULL,
+    `slug` TEXT NOT NULL,
+    `content` TEXT NOT NULL DEFAULT '',
+    `isDefault` INTEGER NOT NULL DEFAULT 0,
+    `sortOrder` INTEGER NOT NULL DEFAULT 0,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS `Page_slug_key` ON `Page`(`slug`);
+CREATE INDEX IF NOT EXISTS `Page_slug_idx` ON `Page`(`slug`);
+
+-- FriendLink 表
+CREATE TABLE IF NOT EXISTS `FriendLink` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `name` TEXT NOT NULL,
+    `url` TEXT NOT NULL,
+    `description` TEXT,
+    `logo` TEXT,
+    `sortOrder` INTEGER NOT NULL DEFAULT 0,
+    `isActive` INTEGER NOT NULL DEFAULT 1,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Comment 表
+CREATE TABLE IF NOT EXISTS `Comment` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `content` TEXT NOT NULL,
+    `authorName` TEXT NOT NULL,
+    `authorEmail` TEXT,
+    `authorUrl` TEXT,
+    `isApproved` INTEGER NOT NULL DEFAULT 0,
+    `isPinned` INTEGER NOT NULL DEFAULT 0,
+    `ip` TEXT,
+    `userAgent` TEXT,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `postId` INTEGER NOT NULL,
+    `parentId` INTEGER,
+    CONSTRAINT `Comment_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `Comment_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `Comment`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS `Comment_postId_idx` ON `Comment`(`postId`);
+
+-- SiteSettings 表
+CREATE TABLE IF NOT EXISTS `SiteSettings` (
+    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `siteName` TEXT NOT NULL DEFAULT '我的博客',
+    `siteDescription` TEXT,
+    `siteKeywords` TEXT,
+    `siteLogo` TEXT,
+    `customCSS` TEXT,
+    `themeColors` TEXT,
+    `socialLinks` TEXT,
+    `ICP` TEXT,
+    `police` TEXT,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

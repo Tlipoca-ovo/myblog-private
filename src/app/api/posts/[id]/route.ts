@@ -9,15 +9,16 @@ type RouteContext = { params: Promise<{ id: string }> };
 /**
  * GET /api/posts/[id] - 获取单个文章
  */
-export async function GET(request: NextRequest, context: RouteContext) {
+export async function GET(_request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
+    const idNum = parseInt(id, 10);
 
     const post = await prisma.post.findUnique({
-      where: { id },
+      where: { id: idNum },
       include: {
         author: { select: { id: true, username: true, nickname: true } },
-        category: { select: { id: true, name: true, slug: true } },
+        categories: { include: { category: { select: { id: true, name: true, slug: true } } } },
         tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
       },
     });
@@ -28,7 +29,8 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json(successResponse({
       ...post,
-      excerpt: post.description,  // 数据库字段是 description，API 兼容用 excerpt
+      category: post.categories[0]?.category ?? null,
+      excerpt: post.description,
       tags: post.tags.map((pt) => pt.tag),
     }));
   } catch (error) {
@@ -53,10 +55,11 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     }
 
     const { id } = await context.params;
+    const idNum = parseInt(id, 10);
     const body = await request.json();
-    const { title, slug, content, excerpt, coverImage, status, tagIds } = body;
+    const { title, slug, content, excerpt, coverImage, status, tagIds, categoryId } = body;
 
-    const existing = await prisma.post.findUnique({ where: { id } });
+    const existing = await prisma.post.findUnique({ where: { id: idNum } });
     if (!existing) {
       return NextResponse.json(notFound("文章不存在").toJSON(), { status: 404 });
     }
@@ -68,7 +71,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     const updateData: Record<string, unknown> = {};
     if (title !== undefined) updateData.title = title;
     if (content !== undefined) updateData.content = content;
-    if (excerpt !== undefined) updateData.description = excerpt;  // excerpt 参数映射到数据库的 description 字段
+    if (excerpt !== undefined) updateData.description = excerpt;
     if (coverImage !== undefined) updateData.coverImage = coverImage;
     if (status !== undefined) updateData.status = status;
 
@@ -80,28 +83,42 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       updateData.slug = slug;
     }
 
-    if (tagIds !== undefined) {
-      await prisma.postTag.deleteMany({ where: { postId: id } });
-      if (tagIds.length > 0) {
-        await prisma.postTag.createMany({
-          data: tagIds.map((tagId: string) => ({ postId: id, tagId })),
+    await prisma.$transaction(async (tx) => {
+      await tx.postTag.deleteMany({ where: { postId: idNum } });
+      await tx.postCategory.deleteMany({ where: { postId: idNum } });
+
+      if (tagIds && Array.isArray(tagIds) && tagIds.length > 0) {
+        await tx.postTag.createMany({
+          data: tagIds.map((tagId: string | number) => ({
+            postId: idNum,
+            tagId: typeof tagId === "string" ? parseInt(tagId, 10) : tagId,
+          })),
         });
       }
-    }
+      if (categoryId) {
+        await tx.postCategory.create({
+          data: {
+            postId: idNum,
+            categoryId: typeof categoryId === "string" ? parseInt(categoryId, 10) : categoryId,
+          },
+        });
+      }
+    });
 
     const post = await prisma.post.update({
-      where: { id },
+      where: { id: idNum },
       data: updateData,
       include: {
         author: { select: { id: true, username: true, nickname: true } },
-        category: { select: { id: true, name: true, slug: true } },
+        categories: { include: { category: { select: { id: true, name: true, slug: true } } } },
         tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
       },
     });
 
     return NextResponse.json(successResponse({
       ...post,
-      excerpt: post.description,  // 数据库字段是 description，API 兼容用 excerpt
+      category: post.categories[0]?.category ?? null,
+      excerpt: post.description,
       tags: post.tags.map((pt) => pt.tag),
     }));
   } catch (error) {
@@ -126,8 +143,9 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     }
 
     const { id } = await context.params;
+    const idNum = parseInt(id, 10);
 
-    const existing = await prisma.post.findUnique({ where: { id } });
+    const existing = await prisma.post.findUnique({ where: { id: idNum } });
     if (!existing) {
       return NextResponse.json(notFound("文章不存在").toJSON(), { status: 404 });
     }
@@ -137,8 +155,9 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     }
 
     await prisma.$transaction([
-      prisma.postTag.deleteMany({ where: { postId: id } }),
-      prisma.post.delete({ where: { id } }),
+      prisma.postTag.deleteMany({ where: { postId: idNum } }),
+      prisma.postCategory.deleteMany({ where: { postId: idNum } }),
+      prisma.post.delete({ where: { id: idNum } }),
     ]);
 
     return NextResponse.json(successResponse({ message: "文章已删除" }));
