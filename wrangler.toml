@@ -6,16 +6,16 @@ compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
 [[d1_databases]]
 binding = "D1"
-database_name = "blog-template-new-db"
-database_id = "9b915a35-df44-4b9d-bede-6d6d68248684"
+database_name = "YOUR_DATABASE_NAME"
+database_id = "YOUR_DATABASE_ID"
 migrations_dir = "migrations"
 migrations_pattern = "migrations/*/migration.sql"
 
 # Cloudflare 环境变量配置
 [vars]
-DATABASE_ID = "9b915a35-df44-4b9d-bede-6d6d68248684"
+DATABASE_ID = "YOUR_DATABASE_ID"
 TZ = "Asia/Shanghai"
 NODE_ENV = "production"
 JWT_EXPIRES_IN = "7d"
 AUTH_COOKIE_NAME = "blog_auth"
-AUTH_COOKIE_MAX_AGE = "604800"
+AUTH_COOKIE_MAX_AE = "604800"
