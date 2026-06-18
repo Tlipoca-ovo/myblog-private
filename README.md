@@ -14,7 +14,7 @@
 
 | 分类 | 技术 |
 |------|------|
-| 框架 | Next.js 16 (App Router) |
+| 框架 | Next.js 15 (App Router) |
 | 数据库 | Prisma ORM + SQLite (本地) / Cloudflare D1 (生产) |
 | 编辑器 | Tiptap |
 | 认证 | JWT |
