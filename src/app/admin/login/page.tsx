@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,7 +30,10 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/admin");
+      // 使用 window.location.href 强制完整页面导航（硬导航）
+      // 登录 API 已通过 Set-Cookie 写入 httpOnly admin_token cookie，
+      // 硬导航确保该 cookie 随请求发送到 server component
+      window.location.href = "/admin";
     } catch {
       setError("网络错误，请稍后重试");
       setLoading(false);

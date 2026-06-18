@@ -6,9 +6,27 @@ import { prisma } from "./db";
 // ============================================
 // 密钥配置
 // ============================================
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production";
+// 生产环境必须显式配置 JWT_SECRET，否则任何人都能伪造 token
+const JWT_SECRET = process.env.JWT_SECRET
+  ?? (process.env.NODE_ENV === "production"
+    ? throwMissingSecret()
+    : "dev-secret-change-in-production");
+
+/**
+ * 模块加载时抛错（生产环境缺 JWT_SECRET）
+ * 用函数包裹以便在三元表达式中保持类型为 string
+ */
+function throwMissingSecret(): string {
+  throw new Error(
+    "生产环境必须设置环境变量 JWT_SECRET（推荐用 `npx wrangler secret put JWT_SECRET` 配置）"
+  );
+}
+
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || "7d") as SignOptions["expiresIn"];
 const BCRYPT_ROUNDS = 12;
+
+// 鉴权 cookie 名（与 middleware、login/logout 路由保持一致）
+export const AUTH_COOKIE_NAME = "admin_token";
 
 // ============================================
 // 类型定义
@@ -75,13 +93,30 @@ export function verifyToken(token: string): JwtPayload | null {
 
 /**
  * 从请求中提取 token
+ * 优先读取 httpOnly cookie（同源 fetch / 浏览器导航会自动携带），
+ * 其次回退到 Authorization: Bearer 请求头（保留对外部调用方的兼容）。
  */
 export function extractToken(request: Request): string | null {
-  const authHeader = request.headers.get("authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return null;
+  // 1) 优先从 httpOnly cookie 读取
+  // NextRequest 实现了 RequestCookie 接口；标准 Request 没有，则手动解析 cookie 头
+  const cookieHeader = request.headers.get("cookie");
+  if (cookieHeader) {
+    const match = cookieHeader
+      .split(";")
+      .map((c) => c.trim())
+      .find((c) => c.startsWith(`${AUTH_COOKIE_NAME}=`));
+    if (match) {
+      return decodeURIComponent(match.slice(AUTH_COOKIE_NAME.length + 1));
+    }
   }
-  return authHeader.slice(7);
+
+  // 2) 回退到 Authorization: Bearer 请求头
+  const authHeader = request.headers.get("authorization");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    return authHeader.slice(7);
+  }
+
+  return null;
 }
 
 // ============================================

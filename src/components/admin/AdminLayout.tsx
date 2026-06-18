@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   FileText,
@@ -43,11 +43,21 @@ const menuItems = [
 export function AdminLayout({ children }: AdminLayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
 
   const handleLogout = async () => {
-    document.cookie = "admin_token=; Max-Age=0; path=/";
-    router.push("/admin/login");
+    // 调用 logout API 清除 httpOnly cookie（客户端无法直接清除 httpOnly cookie）
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      // API 调用失败时的兜底：尝试清除非 httpOnly 的同名 cookie
+      // （httpOnly cookie 客户端清不掉，但保留此兜底无害）
+      document.cookie = "admin_token=; Max-Age=0; path=/";
+    }
+    // 使用 window.location.href 强制完整页面导航
+    window.location.href = "/admin/login";
   };
 
   return (

@@ -37,10 +37,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(unauthorized(result.error || "登录失败").toJSON(), { status: 401 });
     }
 
-    return NextResponse.json(successResponse({
+    // 设置 httpOnly cookie，前端无需自行存储 token
+    // credentials: "include" 的同源请求会自动带上
+    const response = NextResponse.json(successResponse({
       token: result.token,
       user: result.user,
     }));
+    response.cookies.set("admin_token", result.token!, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 天，与 JWT_EXPIRES_IN 默认值一致
+    });
+    return response;
   } catch (error) {
     console.error("登录请求处理失败:", error instanceof Error ? error.message : error);
     return NextResponse.json(errorResponse("服务器内部错误"), { status: 500 });

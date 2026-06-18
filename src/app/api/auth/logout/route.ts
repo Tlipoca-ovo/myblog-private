@@ -1,12 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { successResponse } from "@/lib/api-response";
 
 /**
  * 管理员登出接口
  * POST /api/auth/logout
- * JWT 是无状态的，logout 由客户端自行删除 token
- * 此接口用于记录审计日志（可选）
+ * 清除认证 cookie
  */
-export async function POST() {
-  return NextResponse.json(successResponse({ message: "已退出登录" }));
+export async function POST(request: NextRequest) {
+  const response = NextResponse.json(successResponse({ message: "已退出登录" }));
+
+  // 清除 admin_token cookie
+  response.cookies.set("admin_token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+    path: "/",
+  });
+
+  return response;
 }
