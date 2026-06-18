@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cloudflare": "prisma generate && node scripts/build-cloudflare.mjs",
+    "build:cloudflare": "prisma generate && npx @cloudflare/next-on-pages@1",
     "start": "next start",
     "lint": "eslint",
     "deploy:cloudflare": "opennextjs-cloudflare deploy",
@@ -19,8 +19,8 @@
     "d1:seed": "tsx prisma/seed-d1.ts"
   },
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@libsql/client": "^0.17.3",
-    "@opennextjs/cloudflare": "^1.19.11",
     "@prisma/adapter-better-sqlite3": "^7.8.0",
     "@prisma/adapter-libsql": "^7.8.0",
     "@prisma/client": "^7.8.0",
