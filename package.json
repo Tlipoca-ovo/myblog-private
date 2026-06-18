@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cloudflare": "node scripts/build-cloudflare.mjs",
+    "build:cloudflare": "prisma generate && node scripts/build-cloudflare.mjs",
     "start": "next start",
     "lint": "eslint",
     "deploy:cloudflare": "opennextjs-cloudflare deploy",
