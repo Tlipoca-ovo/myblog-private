@@ -1,0 +1,360 @@
+2026-06-19T07:23:01.536428Z	Cloning repository...
+2026-06-19T07:23:02.248699Z	From https://github.com/Tlipoca-ovo/myblog-private
+2026-06-19T07:23:02.249016Z	 * branch            93d3a3630685998e92f165a353c57b0451176063 -> FETCH_HEAD
+2026-06-19T07:23:02.249121Z	
+2026-06-19T07:23:02.273569Z	HEAD is now at 93d3a36 配置: Next.js 降级完成，文档更新
+2026-06-19T07:23:02.273902Z	
+2026-06-19T07:23:02.312446Z	
+2026-06-19T07:23:02.31279Z	Using v2 root directory strategy
+2026-06-19T07:23:02.323197Z	Success: Finished cloning repository files
+2026-06-19T07:23:03.899505Z	Checking for configuration in a Wrangler configuration file (BETA)
+2026-06-19T07:23:03.899897Z	
+2026-06-19T07:23:03.900722Z	Found wrangler.toml file. Reading build configuration...
+2026-06-19T07:23:04.056016Z	[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProcessing ../../../buildhome/repo/wrangler.toml configuration:[0m
+2026-06-19T07:23:04.056354Z	
+2026-06-19T07:23:04.056458Z	    - Unexpected fields found in d1_databases[0] field: "migrations_pattern"
+2026-06-19T07:23:04.056519Z	
+2026-06-19T07:23:04.056556Z	
+2026-06-19T07:23:04.057727Z	pages_build_output_dir: .open-next
+2026-06-19T07:23:04.057932Z	Build environment variables: 
+2026-06-19T07:23:04.057993Z	  - DATABASE_ID: YOUR_DATABASE_ID
+2026-06-19T07:23:04.058035Z	  - TZ: Asia/Shanghai
+2026-06-19T07:23:04.058105Z	  - NODE_ENV: production
+2026-06-19T07:23:04.058146Z	  - JWT_EXPIRES_IN: 7d
+2026-06-19T07:23:04.058187Z	  - AUTH_COOKIE_NAME: blog_auth
+2026-06-19T07:23:04.058239Z	  - AUTH_COOKIE_MAX_AE: 604800
+2026-06-19T07:23:04.214866Z	Successfully read the Wrangler configuration file.
+2026-06-19T07:23:04.405265Z	Detected the following tools from environment: npm@10.9.2, nodejs@22.16.0
+2026-06-19T07:23:04.40606Z	Installing project dependencies: npm clean-install --progress=false
+2026-06-19T07:23:17.232739Z	npm error code EUSAGE
+2026-06-19T07:23:17.233146Z	npm error
+2026-06-19T07:23:17.233258Z	npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+2026-06-19T07:23:17.233334Z	npm error
+2026-06-19T07:23:17.233397Z	npm error Missing: @cloudflare/next-on-pages@1.13.16 from lock file
+2026-06-19T07:23:17.233454Z	npm error Invalid: lock file's next@16.2.6 does not satisfy next@15.5.2
+2026-06-19T07:23:17.233497Z	npm error Missing: vercel@47.0.4 from lock file
+2026-06-19T07:23:17.23353Z	npm error Invalid: lock file's eslint-config-next@16.2.6 does not satisfy eslint-config-next@15.5.2
+2026-06-19T07:23:17.233573Z	npm error Missing: ast-types@0.14.2 from lock file
+2026-06-19T07:23:17.233747Z	npm error Missing: chalk@5.6.2 from lock file
+2026-06-19T07:23:17.233836Z	npm error Missing: chokidar@3.6.0 from lock file
+2026-06-19T07:23:17.234007Z	npm error Missing: cookie@0.5.0 from lock file
+2026-06-19T07:23:17.234121Z	npm error Missing: esbuild@0.15.18 from lock file
+2026-06-19T07:23:17.234348Z	npm error Missing: miniflare@3.20250718.3 from lock file
+2026-06-19T07:23:17.234544Z	npm error Missing: package-manager-manager@0.2.0 from lock file
+2026-06-19T07:23:17.234684Z	npm error Missing: pcre-to-regexp@1.1.0 from lock file
+2026-06-19T07:23:17.234779Z	npm error Missing: semver@7.8.4 from lock file
+2026-06-19T07:23:17.234848Z	npm error Invalid: lock file's @next/eslint-plugin-next@16.2.6 does not satisfy @next/eslint-plugin-next@15.5.2
+2026-06-19T07:23:17.234916Z	npm error Missing: @rushstack/eslint-patch@1.16.1 from lock file
+2026-06-19T07:23:17.235001Z	npm error Invalid: lock file's @typescript-eslint/eslint-plugin@8.60.1 does not satisfy @typescript-eslint/eslint-plugin@8.61.1
+2026-06-19T07:23:17.235087Z	npm error Invalid: lock file's @typescript-eslint/parser@8.60.1 does not satisfy @typescript-eslint/parser@8.61.1
+2026-06-19T07:23:17.235141Z	npm error Invalid: lock file's eslint-plugin-react-hooks@7.1.1 does not satisfy eslint-plugin-react-hooks@5.2.0
+2026-06-19T07:23:17.235193Z	npm error Invalid: lock file's @typescript-eslint/scope-manager@8.60.1 does not satisfy @typescript-eslint/scope-manager@8.61.1
+2026-06-19T07:23:17.235241Z	npm error Invalid: lock file's @typescript-eslint/type-utils@8.60.1 does not satisfy @typescript-eslint/type-utils@8.61.1
+2026-06-19T07:23:17.23528Z	npm error Invalid: lock file's @typescript-eslint/utils@8.60.1 does not satisfy @typescript-eslint/utils@8.61.1
+2026-06-19T07:23:17.235319Z	npm error Invalid: lock file's @typescript-eslint/visitor-keys@8.60.1 does not satisfy @typescript-eslint/visitor-keys@8.61.1
+2026-06-19T07:23:17.235356Z	npm error Invalid: lock file's @typescript-eslint/types@8.60.1 does not satisfy @typescript-eslint/types@8.61.1
+2026-06-19T07:23:17.235394Z	npm error Invalid: lock file's @typescript-eslint/typescript-estree@8.60.1 does not satisfy @typescript-eslint/typescript-estree@8.61.1
+2026-06-19T07:23:17.235435Z	npm error Invalid: lock file's @typescript-eslint/project-service@8.60.1 does not satisfy @typescript-eslint/project-service@8.61.1
+2026-06-19T07:23:17.235473Z	npm error Invalid: lock file's @typescript-eslint/tsconfig-utils@8.60.1 does not satisfy @typescript-eslint/tsconfig-utils@8.61.1
+2026-06-19T07:23:17.235511Z	npm error Invalid: lock file's semver@7.8.2 does not satisfy semver@7.8.4
+2026-06-19T07:23:17.235556Z	npm error Invalid: lock file's @next/env@16.2.6 does not satisfy @next/env@15.5.2
+2026-06-19T07:23:17.235594Z	npm error Invalid: lock file's @next/swc-darwin-arm64@16.2.6 does not satisfy @next/swc-darwin-arm64@15.5.2
+2026-06-19T07:23:17.235632Z	npm error Invalid: lock file's @next/swc-darwin-x64@16.2.6 does not satisfy @next/swc-darwin-x64@15.5.2
+2026-06-19T07:23:17.23567Z	npm error Invalid: lock file's @next/swc-linux-arm64-gnu@16.2.6 does not satisfy @next/swc-linux-arm64-gnu@15.5.2
+2026-06-19T07:23:17.23571Z	npm error Invalid: lock file's @next/swc-linux-arm64-musl@16.2.6 does not satisfy @next/swc-linux-arm64-musl@15.5.2
+2026-06-19T07:23:17.235751Z	npm error Invalid: lock file's @next/swc-linux-x64-gnu@16.2.6 does not satisfy @next/swc-linux-x64-gnu@15.5.2
+2026-06-19T07:23:17.235792Z	npm error Invalid: lock file's @next/swc-linux-x64-musl@16.2.6 does not satisfy @next/swc-linux-x64-musl@15.5.2
+2026-06-19T07:23:17.23583Z	npm error Invalid: lock file's @next/swc-win32-arm64-msvc@16.2.6 does not satisfy @next/swc-win32-arm64-msvc@15.5.2
+2026-06-19T07:23:17.235868Z	npm error Invalid: lock file's @next/swc-win32-x64-msvc@16.2.6 does not satisfy @next/swc-win32-x64-msvc@15.5.2
+2026-06-19T07:23:17.235906Z	npm error Missing: shellac@0.8.0 from lock file
+2026-06-19T07:23:17.235968Z	npm error Missing: reghex@1.0.2 from lock file
+2026-06-19T07:23:17.23603Z	npm error Missing: @vercel/blob@1.0.2 from lock file
+2026-06-19T07:23:17.23608Z	npm error Missing: @vercel/build-utils@12.1.0 from lock file
+2026-06-19T07:23:17.236129Z	npm error Missing: @vercel/detect-agent@0.2.0 from lock file
+2026-06-19T07:23:17.236192Z	npm error Missing: @vercel/express@0.0.13 from lock file
+2026-06-19T07:23:17.236247Z	npm error Missing: @vercel/fun@1.1.6 from lock file
+2026-06-19T07:23:17.236301Z	npm error Missing: @vercel/go@3.2.3 from lock file
+2026-06-19T07:23:17.236347Z	npm error Missing: @vercel/hono@0.0.21 from lock file
+2026-06-19T07:23:17.236399Z	npm error Missing: @vercel/hydrogen@1.2.4 from lock file
+2026-06-19T07:23:17.236456Z	npm error Missing: @vercel/next@4.12.4 from lock file
+2026-06-19T07:23:17.236505Z	npm error Missing: @vercel/node@5.3.20 from lock file
+2026-06-19T07:23:17.236549Z	npm error Missing: @vercel/python@5.0.0 from lock file
+2026-06-19T07:23:17.236589Z	npm error Missing: @vercel/redwood@2.3.6 from lock file
+2026-06-19T07:23:17.236638Z	npm error Missing: @vercel/remix-builder@5.4.12 from lock file
+2026-06-19T07:23:17.236678Z	npm error Missing: @vercel/ruby@2.2.1 from lock file
+2026-06-19T07:23:17.236716Z	npm error Missing: @vercel/static-build@2.7.22 from lock file
+2026-06-19T07:23:17.236752Z	npm error Missing: chokidar@4.0.0 from lock file
+2026-06-19T07:23:17.23679Z	npm error Missing: jose@5.9.6 from lock file
+2026-06-19T07:23:17.236826Z	npm error Missing: async-retry@1.3.3 from lock file
+2026-06-19T07:23:17.236863Z	npm error Missing: is-buffer@2.0.5 from lock file
+2026-06-19T07:23:17.236928Z	npm error Missing: is-node-process@1.2.0 from lock file
+2026-06-19T07:23:17.236985Z	npm error Missing: throttleit@2.1.0 from lock file
+2026-06-19T07:23:17.237034Z	npm error Missing: undici@5.29.0 from lock file
+2026-06-19T07:23:17.237069Z	npm error Missing: @vercel/static-config@3.1.2 from lock file
+2026-06-19T07:23:17.237108Z	npm error Missing: ts-morph@12.0.0 from lock file
+2026-06-19T07:23:17.23715Z	npm error Missing: @tootallnate/once@2.0.0 from lock file
+2026-06-19T07:23:17.237185Z	npm error Missing: async-listen@1.2.0 from lock file
+2026-06-19T07:23:17.237217Z	npm error Missing: debug@4.3.4 from lock file
+2026-06-19T07:23:17.237252Z	npm error Missing: generic-pool@3.4.2 from lock file
+2026-06-19T07:23:17.237283Z	npm error Missing: micro@9.3.5-canary.3 from lock file
+2026-06-19T07:23:17.23731Z	npm error Missing: ms@2.1.1 from lock file
+2026-06-19T07:23:17.237338Z	npm error Missing: node-fetch@2.6.7 from lock file
+2026-06-19T07:23:17.23737Z	npm error Missing: path-match@1.2.4 from lock file
+2026-06-19T07:23:17.237399Z	npm error Missing: promisepipe@3.0.0 from lock file
+2026-06-19T07:23:17.237427Z	npm error Missing: semver@7.5.4 from lock file
+2026-06-19T07:23:17.237456Z	npm error Missing: stat-mode@0.3.0 from lock file
+2026-06-19T07:23:17.237485Z	npm error Missing: stream-to-promise@2.2.0 from lock file
+2026-06-19T07:23:17.237515Z	npm error Missing: tar@6.2.1 from lock file
+2026-06-19T07:23:17.237552Z	npm error Missing: tinyexec@0.3.2 from lock file
+2026-06-19T07:23:17.237581Z	npm error Missing: tree-kill@1.2.2 from lock file
+2026-06-19T07:23:17.237608Z	npm error Missing: uid-promise@1.0.0 from lock file
+2026-06-19T07:23:17.237637Z	npm error Missing: xdg-app-paths@5.1.0 from lock file
+2026-06-19T07:23:17.237672Z	npm error Missing: yauzl-promise@2.1.3 from lock file
+2026-06-19T07:23:17.237701Z	npm error Missing: @vercel/nft@0.30.1 from lock file
+2026-06-19T07:23:17.237729Z	npm error Missing: @mapbox/node-pre-gyp@2.0.3 from lock file
+2026-06-19T07:23:17.237759Z	npm error Missing: @rollup/pluginutils@5.4.0 from lock file
+2026-06-19T07:23:17.237787Z	npm error Missing: acorn-import-attributes@1.9.5 from lock file
+2026-06-19T07:23:17.23782Z	npm error Missing: async-sema@3.1.1 from lock file
+2026-06-19T07:23:17.237848Z	npm error Missing: estree-walker@2.0.2 from lock file
+2026-06-19T07:23:17.237875Z	npm error Missing: glob@10.5.0 from lock file
+2026-06-19T07:23:17.237902Z	npm error Missing: node-gyp-build@4.8.4 from lock file
+2026-06-19T07:23:17.237929Z	npm error Missing: picomatch@4.0.4 from lock file
+2026-06-19T07:23:17.237973Z	npm error Missing: resolve-from@5.0.0 from lock file
+2026-06-19T07:23:17.238Z	npm error Missing: consola@3.4.2 from lock file
+2026-06-19T07:23:17.238031Z	npm error Missing: https-proxy-agent@7.0.6 from lock file
+2026-06-19T07:23:17.23806Z	npm error Missing: nopt@8.1.0 from lock file
+2026-06-19T07:23:17.238091Z	npm error Missing: semver@7.8.4 from lock file
+2026-06-19T07:23:17.238119Z	npm error Missing: tar@7.5.16 from lock file
+2026-06-19T07:23:17.238155Z	npm error Missing: picomatch@4.0.4 from lock file
+2026-06-19T07:23:17.238183Z	npm error Missing: @edge-runtime/node-utils@2.3.0 from lock file
+2026-06-19T07:23:17.23821Z	npm error Missing: @edge-runtime/primitives@4.1.0 from lock file
+2026-06-19T07:23:17.238236Z	npm error Missing: @edge-runtime/vm@3.2.0 from lock file
+2026-06-19T07:23:17.238263Z	npm error Missing: @types/node@16.18.11 from lock file
+2026-06-19T07:23:17.238292Z	npm error Missing: @vercel/error-utils@2.0.3 from lock file
+2026-06-19T07:23:17.238319Z	npm error Missing: async-listen@3.0.0 from lock file
+2026-06-19T07:23:17.238349Z	npm error Missing: cjs-module-lexer@1.2.3 from lock file
+2026-06-19T07:23:17.238379Z	npm error Missing: edge-runtime@2.5.9 from lock file
+2026-06-19T07:23:17.238411Z	npm error Missing: es-module-lexer@1.4.1 from lock file
+2026-06-19T07:23:17.238441Z	npm error Missing: esbuild@0.14.47 from lock file
+2026-06-19T07:23:17.238473Z	npm error Missing: node-fetch@2.6.9 from lock file
+2026-06-19T07:23:17.239231Z	npm error Missing: path-to-regexp@6.1.0 from lock file
+2026-06-19T07:23:17.239341Z	npm error Missing: path-to-regexp-updated@6.3.0 from lock file
+2026-06-19T07:23:17.239423Z	npm error Missing: ts-node@10.9.1 from lock file
+2026-06-19T07:23:17.239501Z	npm error Missing: typescript@4.9.5 from lock file
+2026-06-19T07:23:17.239561Z	npm error Missing: undici@5.28.4 from lock file
+2026-06-19T07:23:17.239611Z	npm error Missing: path-to-regexp@6.1.0 from lock file
+2026-06-19T07:23:17.23966Z	npm error Missing: @vercel/gatsby-plugin-vercel-analytics@1.0.11 from lock file
+2026-06-19T07:23:17.239706Z	npm error Missing: @vercel/gatsby-plugin-vercel-builder@2.0.95 from lock file
+2026-06-19T07:23:17.23976Z	npm error Missing: web-vitals@0.2.4 from lock file
+2026-06-19T07:23:17.239809Z	npm error Missing: @sinclair/typebox@0.25.24 from lock file
+2026-06-19T07:23:17.239875Z	npm error Missing: esbuild@0.14.47 from lock file
+2026-06-19T07:23:17.239969Z	npm error Missing: fs-extra@11.1.0 from lock file
+2026-06-19T07:23:17.240057Z	npm error Missing: ajv@8.6.3 from lock file
+2026-06-19T07:23:17.240136Z	npm error Missing: json-schema-to-ts@1.6.4 from lock file
+2026-06-19T07:23:17.240218Z	npm error Missing: retry@0.13.1 from lock file
+2026-06-19T07:23:17.240301Z	npm error Missing: @edge-runtime/format@2.2.1 from lock file
+2026-06-19T07:23:17.24036Z	npm error Missing: @edge-runtime/ponyfill@2.4.2 from lock file
+2026-06-19T07:23:17.240434Z	npm error Missing: async-listen@3.0.1 from lock file
+2026-06-19T07:23:17.240513Z	npm error Missing: mri@1.2.0 from lock file
+2026-06-19T07:23:17.240597Z	npm error Missing: picocolors@1.0.0 from lock file
+2026-06-19T07:23:17.240658Z	npm error Missing: pretty-ms@7.0.1 from lock file
+2026-06-19T07:23:17.240706Z	npm error Missing: signal-exit@4.0.2 from lock file
+2026-06-19T07:23:17.240752Z	npm error Missing: time-span@4.0.0 from lock file
+2026-06-19T07:23:17.240799Z	npm error Missing: jsonfile@6.2.1 from lock file
+2026-06-19T07:23:17.240846Z	npm error Missing: universalify@2.0.1 from lock file
+2026-06-19T07:23:17.240902Z	npm error Missing: agent-base@7.1.4 from lock file
+2026-06-19T07:23:17.24097Z	npm error Missing: ts-toolbelt@6.15.5 from lock file
+2026-06-19T07:23:17.24102Z	npm error Missing: arg@4.1.0 from lock file
+2026-06-19T07:23:17.241083Z	npm error Missing: content-type@1.0.4 from lock file
+2026-06-19T07:23:17.241166Z	npm error Missing: raw-body@2.4.1 from lock file
+2026-06-19T07:23:17.241227Z	npm error Missing: abbrev@3.0.1 from lock file
+2026-06-19T07:23:17.241282Z	npm error Missing: http-errors@1.4.0 from lock file
+2026-06-19T07:23:17.241329Z	npm error Missing: path-to-regexp@1.9.0 from lock file
+2026-06-19T07:23:17.241386Z	npm error Missing: parse-ms@2.1.0 from lock file
+2026-06-19T07:23:17.24144Z	npm error Missing: any-promise@1.3.0 from lock file
+2026-06-19T07:23:17.241495Z	npm error Missing: end-of-stream@1.1.0 from lock file
+2026-06-19T07:23:17.241533Z	npm error Missing: stream-to-array@2.3.0 from lock file
+2026-06-19T07:23:17.241566Z	npm error Missing: chownr@2.0.0 from lock file
+2026-06-19T07:23:17.241598Z	npm error Missing: fs-minipass@2.1.0 from lock file
+2026-06-19T07:23:17.241632Z	npm error Missing: minipass@5.0.0 from lock file
+2026-06-19T07:23:17.241675Z	npm error Missing: minizlib@2.1.2 from lock file
+2026-06-19T07:23:17.241709Z	npm error Invalid: lock file's yallist@3.1.1 does not satisfy yallist@4.0.0
+2026-06-19T07:23:17.24174Z	npm error Missing: minipass@3.3.6 from lock file
+2026-06-19T07:23:17.241771Z	npm error Missing: minipass@3.3.6 from lock file
+2026-06-19T07:23:17.241803Z	npm error Missing: convert-hrtime@3.0.0 from lock file
+2026-06-19T07:23:17.241835Z	npm error Missing: @ts-morph/common@0.11.1 from lock file
+2026-06-19T07:23:17.24188Z	npm error Missing: code-block-writer@10.1.1 from lock file
+2026-06-19T07:23:17.24191Z	npm error Missing: path-browserify@1.0.1 from lock file
+2026-06-19T07:23:17.241952Z	npm error Missing: xdg-portable@7.3.0 from lock file
+2026-06-19T07:23:17.241983Z	npm error Missing: os-paths@4.4.0 from lock file
+2026-06-19T07:23:17.242016Z	npm error Missing: yauzl@2.10.0 from lock file
+2026-06-19T07:23:17.242049Z	npm error Missing: yauzl-clone@1.0.4 from lock file
+2026-06-19T07:23:17.242076Z	npm error Missing: buffer-crc32@0.2.13 from lock file
+2026-06-19T07:23:17.242103Z	npm error Missing: fd-slicer@1.1.0 from lock file
+2026-06-19T07:23:17.242133Z	npm error Missing: pend@1.2.0 from lock file
+2026-06-19T07:23:17.242161Z	npm error Missing: events-intercept@2.0.0 from lock file
+2026-06-19T07:23:17.242188Z	npm error Missing: anymatch@3.1.3 from lock file
+2026-06-19T07:23:17.242214Z	npm error Missing: glob-parent@5.1.2 from lock file
+2026-06-19T07:23:17.242241Z	npm error Missing: is-binary-path@2.1.0 from lock file
+2026-06-19T07:23:17.242267Z	npm error Missing: normalize-path@3.0.0 from lock file
+2026-06-19T07:23:17.242295Z	npm error Missing: readdirp@3.6.0 from lock file
+2026-06-19T07:23:17.242322Z	npm error Missing: binary-extensions@2.3.0 from lock file
+2026-06-19T07:23:17.242348Z	npm error Missing: @esbuild/android-arm@0.15.18 from lock file
+2026-06-19T07:23:17.242381Z	npm error Missing: @esbuild/linux-loong64@0.15.18 from lock file
+2026-06-19T07:23:17.242408Z	npm error Missing: esbuild-android-64@0.15.18 from lock file
+2026-06-19T07:23:17.242436Z	npm error Missing: esbuild-android-arm64@0.15.18 from lock file
+2026-06-19T07:23:17.242463Z	npm error Missing: esbuild-darwin-64@0.15.18 from lock file
+2026-06-19T07:23:17.242499Z	npm error Missing: esbuild-darwin-arm64@0.15.18 from lock file
+2026-06-19T07:23:17.242555Z	npm error Missing: esbuild-freebsd-64@0.15.18 from lock file
+2026-06-19T07:23:17.242677Z	npm error Missing: esbuild-freebsd-arm64@0.15.18 from lock file
+2026-06-19T07:23:17.242736Z	npm error Missing: esbuild-linux-32@0.15.18 from lock file
+2026-06-19T07:23:17.242772Z	npm error Missing: esbuild-linux-64@0.15.18 from lock file
+2026-06-19T07:23:17.242812Z	npm error Missing: esbuild-linux-arm@0.15.18 from lock file
+2026-06-19T07:23:17.242856Z	npm error Missing: esbuild-linux-arm64@0.15.18 from lock file
+2026-06-19T07:23:17.242896Z	npm error Missing: esbuild-linux-mips64le@0.15.18 from lock file
+2026-06-19T07:23:17.242961Z	npm error Missing: esbuild-linux-ppc64le@0.15.18 from lock file
+2026-06-19T07:23:17.243001Z	npm error Missing: esbuild-linux-riscv64@0.15.18 from lock file
+2026-06-19T07:23:17.243041Z	npm error Missing: esbuild-linux-s390x@0.15.18 from lock file
+2026-06-19T07:23:17.243099Z	npm error Missing: esbuild-netbsd-64@0.15.18 from lock file
+2026-06-19T07:23:17.243159Z	npm error Missing: esbuild-openbsd-64@0.15.18 from lock file
+2026-06-19T07:23:17.243198Z	npm error Missing: esbuild-sunos-64@0.15.18 from lock file
+2026-06-19T07:23:17.24323Z	npm error Missing: esbuild-windows-32@0.15.18 from lock file
+2026-06-19T07:23:17.243261Z	npm error Missing: esbuild-windows-64@0.15.18 from lock file
+2026-06-19T07:23:17.243295Z	npm error Missing: esbuild-windows-arm64@0.15.18 from lock file
+2026-06-19T07:23:17.243343Z	npm error Missing: acorn@8.14.0 from lock file
+2026-06-19T07:23:17.243383Z	npm error Missing: acorn-walk@8.3.2 from lock file
+2026-06-19T07:23:17.243415Z	npm error Missing: exit-hook@2.2.1 from lock file
+2026-06-19T07:23:17.243446Z	npm error Missing: glob-to-regexp@0.4.1 from lock file
+2026-06-19T07:23:17.243477Z	npm error Missing: stoppable@1.1.0 from lock file
+2026-06-19T07:23:17.243522Z	npm error Missing: undici@5.29.0 from lock file
+2026-06-19T07:23:17.243576Z	npm error Missing: workerd@1.20250718.0 from lock file
+2026-06-19T07:23:17.243621Z	npm error Missing: ws@8.18.0 from lock file
+2026-06-19T07:23:17.243661Z	npm error Missing: youch@3.3.4 from lock file
+2026-06-19T07:23:17.243731Z	npm error Invalid: lock file's zod@4.4.3 does not satisfy zod@3.22.3
+2026-06-19T07:23:17.243795Z	npm error Missing: @fastify/busboy@2.1.1 from lock file
+2026-06-19T07:23:17.243865Z	npm error Missing: @cloudflare/workerd-darwin-64@1.20250718.0 from lock file
+2026-06-19T07:23:17.243919Z	npm error Missing: @cloudflare/workerd-darwin-arm64@1.20250718.0 from lock file
+2026-06-19T07:23:17.243982Z	npm error Missing: @cloudflare/workerd-linux-64@1.20250718.0 from lock file
+2026-06-19T07:23:17.244032Z	npm error Missing: @cloudflare/workerd-linux-arm64@1.20250718.0 from lock file
+2026-06-19T07:23:17.244079Z	npm error Missing: @cloudflare/workerd-windows-64@1.20250718.0 from lock file
+2026-06-19T07:23:17.244133Z	npm error Missing: cookie@0.7.2 from lock file
+2026-06-19T07:23:17.244177Z	npm error Missing: mustache@4.2.0 from lock file
+2026-06-19T07:23:17.244224Z	npm error Missing: stacktracey@2.2.0 from lock file
+2026-06-19T07:23:17.244276Z	npm error Missing: as-table@1.0.55 from lock file
+2026-06-19T07:23:17.24433Z	npm error Missing: get-source@2.0.12 from lock file
+2026-06-19T07:23:17.244375Z	npm error Missing: printable-characters@1.0.42 from lock file
+2026-06-19T07:23:17.244417Z	npm error Missing: data-uri-to-buffer@2.0.2 from lock file
+2026-06-19T07:23:17.244471Z	npm error Missing: @isaacs/fs-minipass@4.0.1 from lock file
+2026-06-19T07:23:17.244526Z	npm error Missing: chownr@3.0.0 from lock file
+2026-06-19T07:23:17.244581Z	npm error Missing: minizlib@3.1.0 from lock file
+2026-06-19T07:23:17.244633Z	npm error Missing: yallist@5.0.0 from lock file
+2026-06-19T07:23:17.244693Z	npm error Missing: ms@2.1.2 from lock file
+2026-06-19T07:23:17.24475Z	npm error Invalid: lock file's lru-cache@5.1.1 does not satisfy lru-cache@6.0.0
+2026-06-19T07:23:17.2448Z	npm error Missing: esbuild-android-64@0.14.47 from lock file
+2026-06-19T07:23:17.244835Z	npm error Missing: esbuild-android-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.244872Z	npm error Missing: esbuild-darwin-64@0.14.47 from lock file
+2026-06-19T07:23:17.244914Z	npm error Missing: esbuild-darwin-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.24497Z	npm error Missing: esbuild-freebsd-64@0.14.47 from lock file
+2026-06-19T07:23:17.245008Z	npm error Missing: esbuild-freebsd-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.245047Z	npm error Missing: esbuild-linux-32@0.14.47 from lock file
+2026-06-19T07:23:17.245087Z	npm error Missing: esbuild-linux-64@0.14.47 from lock file
+2026-06-19T07:23:17.245128Z	npm error Missing: esbuild-linux-arm@0.14.47 from lock file
+2026-06-19T07:23:17.245166Z	npm error Missing: esbuild-linux-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.245216Z	npm error Missing: esbuild-linux-mips64le@0.14.47 from lock file
+2026-06-19T07:23:17.245266Z	npm error Missing: esbuild-linux-ppc64le@0.14.47 from lock file
+2026-06-19T07:23:17.245315Z	npm error Missing: esbuild-linux-riscv64@0.14.47 from lock file
+2026-06-19T07:23:17.245352Z	npm error Missing: esbuild-linux-s390x@0.14.47 from lock file
+2026-06-19T07:23:17.245389Z	npm error Missing: esbuild-netbsd-64@0.14.47 from lock file
+2026-06-19T07:23:17.245423Z	npm error Missing: esbuild-openbsd-64@0.14.47 from lock file
+2026-06-19T07:23:17.245454Z	npm error Missing: esbuild-sunos-64@0.14.47 from lock file
+2026-06-19T07:23:17.245486Z	npm error Missing: esbuild-windows-32@0.14.47 from lock file
+2026-06-19T07:23:17.245524Z	npm error Missing: esbuild-windows-64@0.14.47 from lock file
+2026-06-19T07:23:17.245561Z	npm error Missing: esbuild-windows-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.245597Z	npm error Missing: jackspeak@3.4.3 from lock file
+2026-06-19T07:23:17.245628Z	npm error Missing: minimatch@9.0.9 from lock file
+2026-06-19T07:23:17.24566Z	npm error Missing: path-scurry@1.11.1 from lock file
+2026-06-19T07:23:17.245699Z	npm error Missing: @isaacs/cliui@8.0.2 from lock file
+2026-06-19T07:23:17.245734Z	npm error Missing: @pkgjs/parseargs@0.11.0 from lock file
+2026-06-19T07:23:17.245774Z	npm error Missing: string-width@5.1.2 from lock file
+2026-06-19T07:23:17.245812Z	npm error Missing: string-width-cjs@4.2.3 from lock file
+2026-06-19T07:23:17.245843Z	npm error Missing: strip-ansi@7.2.0 from lock file
+2026-06-19T07:23:17.245875Z	npm error Missing: strip-ansi-cjs@6.0.1 from lock file
+2026-06-19T07:23:17.245905Z	npm error Missing: wrap-ansi@8.1.0 from lock file
+2026-06-19T07:23:17.245936Z	npm error Missing: wrap-ansi-cjs@7.0.0 from lock file
+2026-06-19T07:23:17.245982Z	npm error Missing: emoji-regex@8.0.0 from lock file
+2026-06-19T07:23:17.246013Z	npm error Missing: is-fullwidth-code-point@3.0.0 from lock file
+2026-06-19T07:23:17.246046Z	npm error Missing: string-width@4.2.3 from lock file
+2026-06-19T07:23:17.246094Z	npm error Missing: brace-expansion@2.1.1 from lock file
+2026-06-19T07:23:17.246147Z	npm error Missing: lru-cache@10.4.3 from lock file
+2026-06-19T07:23:17.246199Z	npm error Missing: eastasianwidth@0.2.0 from lock file
+2026-06-19T07:23:17.246242Z	npm error Missing: ansi-regex@6.2.2 from lock file
+2026-06-19T07:23:17.246308Z	npm error Missing: ansi-styles@6.2.3 from lock file
+2026-06-19T07:23:17.24637Z	npm error Missing: esbuild-android-64@0.14.47 from lock file
+2026-06-19T07:23:17.246409Z	npm error Missing: esbuild-android-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.246441Z	npm error Missing: esbuild-darwin-64@0.14.47 from lock file
+2026-06-19T07:23:17.246471Z	npm error Missing: esbuild-darwin-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.246502Z	npm error Missing: esbuild-freebsd-64@0.14.47 from lock file
+2026-06-19T07:23:17.247136Z	npm error Missing: esbuild-freebsd-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.247199Z	npm error Missing: esbuild-linux-32@0.14.47 from lock file
+2026-06-19T07:23:17.247239Z	npm error Missing: esbuild-linux-64@0.14.47 from lock file
+2026-06-19T07:23:17.247269Z	npm error Missing: esbuild-linux-arm@0.14.47 from lock file
+2026-06-19T07:23:17.247297Z	npm error Missing: esbuild-linux-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.247325Z	npm error Missing: esbuild-linux-mips64le@0.14.47 from lock file
+2026-06-19T07:23:17.247357Z	npm error Missing: esbuild-linux-ppc64le@0.14.47 from lock file
+2026-06-19T07:23:17.247392Z	npm error Missing: esbuild-linux-riscv64@0.14.47 from lock file
+2026-06-19T07:23:17.247432Z	npm error Missing: esbuild-linux-s390x@0.14.47 from lock file
+2026-06-19T07:23:17.247477Z	npm error Missing: esbuild-netbsd-64@0.14.47 from lock file
+2026-06-19T07:23:17.247512Z	npm error Missing: esbuild-openbsd-64@0.14.47 from lock file
+2026-06-19T07:23:17.247544Z	npm error Missing: esbuild-sunos-64@0.14.47 from lock file
+2026-06-19T07:23:17.247573Z	npm error Missing: esbuild-windows-32@0.14.47 from lock file
+2026-06-19T07:23:17.247602Z	npm error Missing: esbuild-windows-64@0.14.47 from lock file
+2026-06-19T07:23:17.247636Z	npm error Missing: esbuild-windows-arm64@0.14.47 from lock file
+2026-06-19T07:23:17.247666Z	npm error Missing: @tsconfig/node10@1.0.12 from lock file
+2026-06-19T07:23:17.247701Z	npm error Missing: @tsconfig/node12@1.0.11 from lock file
+2026-06-19T07:23:17.247728Z	npm error Missing: @tsconfig/node14@1.0.3 from lock file
+2026-06-19T07:23:17.247758Z	npm error Missing: @tsconfig/node16@1.0.4 from lock file
+2026-06-19T07:23:17.24779Z	npm error Missing: create-require@1.1.1 from lock file
+2026-06-19T07:23:17.247817Z	npm error Missing: diff@4.0.4 from lock file
+2026-06-19T07:23:17.247845Z	npm error Missing: make-error@1.3.6 from lock file
+2026-06-19T07:23:17.247873Z	npm error Missing: v8-compile-cache-lib@3.0.1 from lock file
+2026-06-19T07:23:17.2479Z	npm error Missing: yn@3.1.1 from lock file
+2026-06-19T07:23:17.247927Z	npm error Missing: json-schema-traverse@1.0.0 from lock file
+2026-06-19T07:23:17.247969Z	npm error Missing: bytes@3.1.0 from lock file
+2026-06-19T07:23:17.247999Z	npm error Missing: http-errors@1.7.3 from lock file
+2026-06-19T07:23:17.248027Z	npm error Missing: iconv-lite@0.4.24 from lock file
+2026-06-19T07:23:17.248054Z	npm error Missing: depd@1.1.2 from lock file
+2026-06-19T07:23:17.248082Z	npm error Missing: setprototypeof@1.1.1 from lock file
+2026-06-19T07:23:17.248108Z	npm error Missing: statuses@1.5.0 from lock file
+2026-06-19T07:23:17.248135Z	npm error Missing: toidentifier@1.0.0 from lock file
+2026-06-19T07:23:17.248163Z	npm error Missing: inherits@2.0.1 from lock file
+2026-06-19T07:23:17.24819Z	npm error Missing: statuses@1.5.0 from lock file
+2026-06-19T07:23:17.248219Z	npm error Missing: isarray@0.0.1 from lock file
+2026-06-19T07:23:17.248257Z	npm error Missing: once@1.3.3 from lock file
+2026-06-19T07:23:17.248286Z	npm error Missing: readdirp@4.1.2 from lock file
+2026-06-19T07:23:17.248313Z	npm error Missing: emoji-regex@8.0.0 from lock file
+2026-06-19T07:23:17.24834Z	npm error
+2026-06-19T07:23:17.248369Z	npm error Clean install a project
+2026-06-19T07:23:17.248396Z	npm error
+2026-06-19T07:23:17.248427Z	npm error Usage:
+2026-06-19T07:23:17.248467Z	npm error npm ci
+2026-06-19T07:23:17.248506Z	npm error
+2026-06-19T07:23:17.248534Z	npm error Options:
+2026-06-19T07:23:17.248563Z	npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+2026-06-19T07:23:17.248591Z	npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+2026-06-19T07:23:17.248618Z	npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+2026-06-19T07:23:17.248652Z	npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+2026-06-19T07:23:17.248685Z	npm error [--no-bin-links] [--no-fund] [--dry-run]
+2026-06-19T07:23:17.248728Z	npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+2026-06-19T07:23:17.248766Z	npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+2026-06-19T07:23:17.248793Z	npm error
+2026-06-19T07:23:17.24882Z	npm error aliases: clean-install, ic, install-clean, isntall-clean
+2026-06-19T07:23:17.248856Z	npm error
+2026-06-19T07:23:17.2489Z	npm error Run "npm help ci" for more info
+2026-06-19T07:23:17.248936Z	npm error A complete log of this run can be found in: /opt/buildhome/.npm/_logs/2026-06-19T07_23_05_164Z-debug-0.log
+2026-06-19T07:23:17.290766Z	Error: Exit with error code: 1
+2026-06-19T07:23:17.2911Z	    at ChildProcess.<anonymous> (/snapshot/dist/run-build.js)
+2026-06-19T07:23:17.291202Z	    at Object.onceWrapper (node:events:652:26)
+2026-06-19T07:23:17.291265Z	    at ChildProcess.emit (node:events:537:28)
+2026-06-19T07:23:17.291325Z	    at ChildProcess._handle.onexit (node:internal/child_process:291:12)
+2026-06-19T07:23:17.296555Z	Failed: build command exited with code: 1
+2026-06-19T07:23:17.90634Z	Failed: error occurred while running build command

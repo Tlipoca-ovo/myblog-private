@@ -2,17 +2,13 @@
   "name": "blog-template",
   "version": "0.1.0",
   "private": true,
-  "overrides": {
-    "next": "15.5.2"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "build:cloudflare": "prisma generate && npx @cloudflare/next-on-pages@1",
     "start": "next start",
     "lint": "eslint",
-    "deploy:cloudflare": "opennextjs-cloudflare deploy",
-    "dev:cloudflare": "opennextjs-cloudflare preview",
+    "deploy:cloudflare": "npx @cloudflare/next-on-pages@1 deploy",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
